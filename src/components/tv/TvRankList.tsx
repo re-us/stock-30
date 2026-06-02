@@ -1,5 +1,6 @@
 import type { StockItem } from "@/types/stock";
 import { formatMentionScore10 } from "@/utils/format";
+import { getStockDisplayName } from "@/utils/stockNames";
 
 type TvRankListProps = {
   stocks: StockItem[];
@@ -28,7 +29,7 @@ export function TvRankList({ stocks, selectedId, onSelect }: TvRankListProps) {
           >
             <span className="text-xl font-black leading-none tabular-nums text-slate-700">{index + 1}</span>
             <span className="min-w-0">
-              <span className="truncate text-lg font-black leading-none text-slate-950">{stock.name}</span>
+              <span className="truncate text-lg font-black leading-none text-slate-950">{getStockDisplayName(stock)}</span>
               <span className="ml-3 text-base font-bold leading-none text-slate-500">{stock.symbol} · {stock.market}</span>
             </span>
             <span className="text-right text-xl font-black leading-none tabular-nums text-slate-950">Score {formatMentionScore10(stock.mentionScore)}</span>

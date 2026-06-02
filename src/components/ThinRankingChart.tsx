@@ -1,5 +1,6 @@
 import type { StockItem } from "@/types/stock";
 import { formatMentionScore10 } from "@/utils/format";
+import { getStockDisplayName } from "@/utils/stockNames";
 
 type ThinRankingChartProps = {
   stocks: StockItem[];
@@ -28,7 +29,7 @@ export function ThinRankingChart({ stocks, selectedId, onSelect }: ThinRankingCh
           >
             <span className="text-xs font-black tabular-nums text-slate-500">{stock.rank}</span>
             <span className="min-w-0">
-              <span className="block truncate text-xs font-black text-slate-900">{stock.name}</span>
+              <span className="block truncate text-xs font-black text-slate-900">{getStockDisplayName(stock)}</span>
               <span className="mt-1 block h-1.5 overflow-hidden rounded-full bg-slate-100">
                 <span className="block h-full rounded-full bg-blue-500" style={{ width: `${(stock.mentionScore / maxScore) * 100}%` }} />
               </span>

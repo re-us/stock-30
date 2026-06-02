@@ -1,5 +1,6 @@
 import type { HorizonSignal, StockItem } from "@/types/stock";
 import { formatMentionScore10, formatNumber, formatPercent } from "@/utils/format";
+import { getStockDisplayName } from "@/utils/stockNames";
 import { MiniTrendChart } from "./MiniTrendChart";
 import { SentimentBar } from "./SentimentBar";
 import { formatDataQuality, formatGrade } from "./WeeklyProbabilityBadge";
@@ -24,7 +25,7 @@ export function StockDetailPanel({ stock }: StockDetailPanelProps) {
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <p className="text-sm font-black text-blue-600">현재 {stock.rank}위</p>
-          <h2 className="mt-2 truncate text-[22px] font-black leading-7 text-slate-950 sm:text-2xl">{stock.name}</h2>
+          <h2 className="mt-2 truncate text-[22px] font-black leading-7 text-slate-950 sm:text-2xl">{getStockDisplayName(stock)}</h2>
           <p className="mt-1 text-sm font-bold text-slate-500">
             {stock.symbol} · {stock.market} · {stock.sector}
           </p>
@@ -36,7 +37,7 @@ export function StockDetailPanel({ stock }: StockDetailPanelProps) {
       </div>
 
       <div className="mt-5 grid grid-cols-2 gap-2 sm:gap-3">
-        <Metric label="전일 대비" value={formatPercent(stock.mentionChangeRate)} tone={stock.mentionChangeRate >= 0 ? "text-emerald-600" : "text-rose-500"} />
+        <Metric label="전일대비 관심량 증가" value={formatPercent(stock.mentionChangeRate)} tone={stock.mentionChangeRate >= 0 ? "text-emerald-600" : "text-rose-500"} />
         <Metric label="커뮤니티" value={formatNumber(stock.communityMentions)} />
         <Metric label="뉴스" value={formatNumber(stock.newsCount)} />
         <Metric label="검색 지수" value={String(stock.searchScore)} />
@@ -44,9 +45,9 @@ export function StockDetailPanel({ stock }: StockDetailPanelProps) {
 
       {stock.weeklyUpsideProbability && (
         <section className="mt-7">
-          <h3 className="text-base font-black text-slate-950">이번주 상승확률 분석</h3>
+          <h3 className="text-base font-black text-slate-950">이번주 상승확률 (데이터 기반 예측)</h3>
           <div className="mt-4 rounded-[24px] bg-blue-50 p-5">
-            <p className="text-xs font-bold text-blue-700">이번주 상승확률</p>
+            <p className="break-keep text-xs font-bold leading-5 text-blue-700">이번주 상승확률 (데이터 기반 예측)</p>
             <div className="mt-2 flex items-end justify-between gap-3">
               <p className="text-[42px] font-black leading-none tabular-nums text-blue-950">{stock.weeklyUpsideProbability.probability}%</p>
               <div className="text-right">
@@ -142,7 +143,7 @@ export function StockDetailPanel({ stock }: StockDetailPanelProps) {
 function Metric({ label, value, tone = "text-slate-950" }: { label: string; value: string; tone?: string }) {
   return (
     <div className="rounded-[18px] bg-slate-50 p-4">
-      <p className="text-xs font-bold text-slate-500">{label}</p>
+      <p className="break-keep text-xs font-bold leading-5 text-slate-500">{label}</p>
       <p className={`mt-1 text-lg font-black tabular-nums ${tone}`}>{value}</p>
     </div>
   );

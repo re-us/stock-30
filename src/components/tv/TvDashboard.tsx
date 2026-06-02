@@ -87,7 +87,7 @@ export function TvDashboard() {
           </div>
           <div className="text-right">
             <p className="text-lg font-black text-slate-600">업데이트 기준: 매일 09:00</p>
-            <p className="mt-1 text-base font-bold text-slate-400">최근 {formatKoreanTime(updatedAt)} · 투자 추천이 아닌 참고 분석 자료</p>
+            <p className="mt-1 text-base font-bold text-slate-400">최근 {formatKoreanTime(updatedAt)} · 데이터 기반 주식투자 참고 분석자료</p>
           </div>
         </header>
 

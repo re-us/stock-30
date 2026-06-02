@@ -1,5 +1,6 @@
 import type { StockItem } from "@/types/stock";
-import { formatMentionScore10, formatNumber, formatPercent } from "@/utils/format";
+import { formatMentionScore10, formatPercent } from "@/utils/format";
+import { getStockDisplayName } from "@/utils/stockNames";
 
 type TvStockFocusProps = {
   stock: StockItem;
@@ -15,7 +16,7 @@ export function TvStockFocus({ stock }: TvStockFocusProps) {
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <p className="text-xl font-black text-blue-600">현재 {stock.rank}위</p>
-          <h2 className="mt-2 truncate text-5xl font-black leading-tight text-slate-950">{stock.name}</h2>
+          <h2 className="mt-2 truncate text-5xl font-black leading-tight text-slate-950">{getStockDisplayName(stock)}</h2>
           <p className="mt-1 truncate text-xl font-bold text-slate-500">
             {stock.symbol} · {stock.market} · {stock.sector}
           </p>
@@ -27,8 +28,8 @@ export function TvStockFocus({ stock }: TvStockFocusProps) {
       </div>
 
       <div className="mt-5 grid grid-cols-2 gap-3">
-        <Metric label="전일 대비" value={formatPercent(stock.mentionChangeRate)} tone={stock.mentionChangeRate >= 0 ? "text-emerald-600" : "text-rose-500"} />
-        <Metric label="이번주 상승확률" value={probability === null ? "-" : `${probability}%`} tone="text-blue-600" />
+        <Metric label="전일대비 관심량 증가" value={formatPercent(stock.mentionChangeRate)} tone={stock.mentionChangeRate >= 0 ? "text-emerald-600" : "text-rose-500"} />
+        <Metric label="이번주 상승확률 (데이터 기반 예측)" value={probability === null ? "-" : `${probability}%`} tone="text-blue-600" />
       </div>
 
       <div className="mt-4 rounded-[22px] bg-blue-50 p-4">
@@ -57,7 +58,7 @@ export function TvStockFocus({ stock }: TvStockFocusProps) {
         <h3 className="text-xl font-black text-slate-950">관련 뉴스</h3>
         <ul className="mt-2 space-y-2">
           {headlines.map((headline) => (
-            <li key={headline} className="line-clamp-1 rounded-2xl bg-slate-50 px-4 py-3 text-lg font-bold text-slate-600">
+            <li key={headline} className="break-words rounded-2xl bg-slate-50 px-4 py-2.5 text-base font-bold leading-6 text-slate-600">
               {headline}
             </li>
           ))}
@@ -92,7 +93,7 @@ export function TvStockFocus({ stock }: TvStockFocusProps) {
 function Metric({ label, value, tone }: { label: string; value: string; tone: string }) {
   return (
     <div className="rounded-[20px] bg-slate-50 p-4">
-      <p className="text-base font-bold text-slate-500">{label}</p>
+      <p className="break-keep text-sm font-bold leading-5 text-slate-500">{label}</p>
       <p className={`mt-1 text-4xl font-black tabular-nums ${tone}`}>{value}</p>
     </div>
   );

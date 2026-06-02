@@ -1,5 +1,6 @@
 import type { StockItem } from "@/types/stock";
 import { formatMentionScore10, formatNumber, formatPercent, formatRankChange } from "@/utils/format";
+import { getStockDisplayName } from "@/utils/stockNames";
 import { MiniTrendChart } from "./MiniTrendChart";
 import { SentimentBar } from "./SentimentBar";
 import { WeeklyProbabilityBadge } from "./WeeklyProbabilityBadge";
@@ -35,7 +36,7 @@ export function StockRankCard({ stock, isSelected, onSelect }: StockRankCardProp
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2.5">
             <div className="min-w-0">
-              <h2 className="truncate text-[17px] font-black leading-6 text-slate-950">{stock.name}</h2>
+              <h2 className="truncate text-[17px] font-black leading-6 text-slate-950">{getStockDisplayName(stock)}</h2>
               <p className="mt-0.5 truncate text-xs font-bold text-slate-500">
                 {stock.symbol} · {stock.market} · {stock.sector}
               </p>
@@ -47,8 +48,8 @@ export function StockRankCard({ stock, isSelected, onSelect }: StockRankCardProp
           </div>
 
           <div className="mt-3 grid grid-cols-2 gap-2">
-            <SmallMetric label="언급 변화" value={formatPercent(stock.mentionChangeRate)} tone={stock.mentionChangeRate >= 0 ? "text-emerald-600" : "text-rose-500"} />
-            <SmallMetric label="상승확률" value={stock.weeklyUpsideProbability ? `${stock.weeklyUpsideProbability.probability}%` : "-"} tone="text-blue-600" />
+            <SmallMetric label="전일대비 관심량 증가" value={formatPercent(stock.mentionChangeRate)} tone={stock.mentionChangeRate >= 0 ? "text-emerald-600" : "text-rose-500"} />
+            <SmallMetric label="이번주 상승확률 (데이터 기반 예측)" value={stock.weeklyUpsideProbability ? `${stock.weeklyUpsideProbability.probability}%` : "-"} tone="text-blue-600" />
           </div>
 
           <div className="mt-3 grid gap-2.5 sm:grid-cols-[1fr_104px]">
@@ -79,7 +80,7 @@ export function StockRankCard({ stock, isSelected, onSelect }: StockRankCardProp
 function SmallMetric({ label, value, tone }: { label: string; value: string; tone: string }) {
   return (
     <div className="rounded-[16px] bg-white/75 px-3 py-2.5">
-      <p className="text-[11px] font-bold text-slate-400">{label}</p>
+      <p className="break-keep text-[11px] font-bold leading-4 text-slate-400">{label}</p>
       <p className={`mt-0.5 text-base font-black tabular-nums ${tone}`}>{value}</p>
     </div>
   );

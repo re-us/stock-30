@@ -15,6 +15,7 @@ import { ThinRankingChart } from "@/components/ThinRankingChart";
 import { mockStocks } from "@/data/mockStocks";
 import { calculateWeeklyUpsideProbability } from "@/lib/analytics/weeklyUpsideProbability";
 import type { FilterKey, QuantSignal, RankingsResponse, SignalHorizon, SourceStatus, StockItem } from "@/types/stock";
+import { getStockDisplayName } from "@/utils/stockNames";
 
 type DataState = "live" | "partial" | "mock";
 type RankingMode = "mentions" | "probability";
@@ -118,6 +119,7 @@ export default function Home() {
       const matchesQuery =
         normalizedQuery.length === 0 ||
         stock.name.toLowerCase().includes(normalizedQuery) ||
+        getStockDisplayName(stock).toLowerCase().includes(normalizedQuery) ||
         stock.symbol.toLowerCase().includes(normalizedQuery) ||
         stock.sector.toLowerCase().includes(normalizedQuery);
 

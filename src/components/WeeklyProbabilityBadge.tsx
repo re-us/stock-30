@@ -12,7 +12,7 @@ export function WeeklyProbabilityBadge({ probability, compact = false }: WeeklyP
     <div className="rounded-[18px] bg-blue-50 px-4 py-3">
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="whitespace-nowrap text-xs font-black text-blue-700">이번주 상승확률</p>
+          <p className="break-keep text-xs font-black leading-4 text-blue-700">이번주 상승확률 (데이터 기반 예측)</p>
           <p className="mt-1 text-[28px] font-black leading-8 tabular-nums text-blue-950">{probability.probability}%</p>
         </div>
         <div className="shrink-0 text-right">
