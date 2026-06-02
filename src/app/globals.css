@@ -48,6 +48,48 @@ input {
   animation: tvFocusEnter 620ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.tv-rank-panel {
+  position: relative;
+  isolation: isolate;
+}
+
+.tv-rank-panel::before {
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  content: "";
+  border-radius: 27px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(238, 244, 255, 0.64));
+}
+
+.tv-rank-row {
+  position: relative;
+  overflow: hidden;
+  transform: translateZ(0);
+}
+
+.tv-rank-row > * {
+  position: relative;
+  z-index: 1;
+}
+
+.tv-rank-row::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0.78), transparent 34%, rgba(49, 130, 246, 0.08));
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.tv-rank-change {
+  animation: tvRankChange 1250ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.tv-rank-change::after {
+  animation: tvRankSweep 1150ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 @keyframes rollingStockEnter {
   from {
     opacity: 0;
@@ -67,5 +109,33 @@ input {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes tvRankChange {
+  0% {
+    transform: translateY(8px) scale(0.992);
+    box-shadow: 0 3px 10px rgba(15, 23, 42, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.88);
+  }
+  42% {
+    transform: translateY(-4px) scale(1.012);
+    box-shadow: 0 14px 28px rgba(49, 130, 246, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes tvRankSweep {
+  0% {
+    opacity: 0;
+    transform: translateX(-80%);
+  }
+  35% {
+    opacity: 0.92;
+  }
+  100% {
+    opacity: 0.72;
+    transform: translateX(0);
   }
 }

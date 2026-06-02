@@ -77,7 +77,7 @@ export function TvDashboard() {
   return (
     <main className="h-screen w-screen overflow-hidden bg-[#f8f9fa] p-8 text-[#191f28]">
       <div className="flex h-full flex-col gap-5">
-        <header className="flex h-[92px] items-center justify-between rounded-[28px] bg-white px-8 shadow-[0_10px_30px_rgba(15,23,42,0.04)]">
+        <header className="flex h-[92px] items-center justify-between rounded-[28px] bg-gradient-to-br from-white via-white to-slate-100 px-8 shadow-[0_18px_42px_rgba(15,23,42,0.075),inset_0_1px_0_rgba(255,255,255,0.9)] ring-1 ring-black/5">
           <div>
             <div className="flex items-end gap-4">
               <h1 className="text-5xl font-black leading-none tracking-normal">STOCK 30</h1>

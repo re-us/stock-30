@@ -12,7 +12,7 @@ export function TvStockFocus({ stock }: TvStockFocusProps) {
   const headlines = stock.headlines.slice(0, 2);
 
   return (
-    <aside key={stock.id} className="tv-focus-enter min-h-0 overflow-hidden rounded-[28px] bg-white p-6 shadow-[0_10px_30px_rgba(15,23,42,0.04)]">
+    <aside key={stock.id} className="tv-focus-enter min-h-0 overflow-hidden rounded-[28px] bg-gradient-to-br from-white via-white to-slate-100 p-6 shadow-[0_18px_45px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,0.92)] ring-1 ring-black/5">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <p className="text-xl font-black text-blue-600">현재 {stock.rank}위</p>
@@ -21,7 +21,7 @@ export function TvStockFocus({ stock }: TvStockFocusProps) {
             {stock.symbol} · {stock.market} · {stock.sector}
           </p>
         </div>
-        <div className="shrink-0 rounded-[24px] bg-slate-950 px-6 py-4 text-right text-white">
+        <div className="shrink-0 rounded-[24px] bg-gradient-to-br from-slate-950 to-slate-800 px-6 py-4 text-right text-white shadow-[0_16px_28px_rgba(15,23,42,0.22),inset_0_1px_0_rgba(255,255,255,0.12)]">
           <p className="text-base font-bold text-slate-300">Score / 10</p>
           <p className="text-6xl font-black leading-none tabular-nums">{formatMentionScore10(stock.mentionScore)}</p>
         </div>
@@ -32,7 +32,7 @@ export function TvStockFocus({ stock }: TvStockFocusProps) {
         <Metric label="이번주 상승확률 (데이터 기반 예측)" value={probability === null ? "-" : `${probability}%`} tone="text-blue-600" />
       </div>
 
-      <div className="mt-4 rounded-[22px] bg-blue-50 p-4">
+      <div className="mt-4 rounded-[22px] bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] ring-1 ring-blue-100">
         <p className="text-base font-black text-blue-700">참고 분석 지표</p>
         <p className="mt-1 text-2xl font-black text-blue-950">온라인 언급 흐름과 가격 흐름 기반 참고치</p>
         <p className="mt-2 line-clamp-1 text-base font-semibold text-blue-800">투자 판단의 근거가 아닌 보조 자료입니다.</p>
@@ -92,7 +92,7 @@ export function TvStockFocus({ stock }: TvStockFocusProps) {
 
 function Metric({ label, value, tone }: { label: string; value: string; tone: string }) {
   return (
-    <div className="rounded-[20px] bg-slate-50 p-4">
+    <div className="rounded-[20px] bg-gradient-to-br from-white to-slate-50 p-4 shadow-[0_6px_14px_rgba(15,23,42,0.04),inset_0_1px_0_rgba(255,255,255,0.9)] ring-1 ring-slate-200/70">
       <p className="break-keep text-sm font-bold leading-5 text-slate-500">{label}</p>
       <p className={`mt-1 text-4xl font-black tabular-nums ${tone}`}>{value}</p>
     </div>
