@@ -147,7 +147,10 @@ export default function Home() {
               <SearchBar value={query} onChange={setQuery} />
             </div>
             <div className="mt-4 flex items-center justify-between px-1">
-              <p className="text-sm font-black text-slate-900">TOP 30 랭킹</p>
+              <div className="flex items-center gap-2">
+                <p className="text-sm font-black text-slate-900">TOP 30 랭킹</p>
+                <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-black text-slate-500">최근 24시간 집계</span>
+              </div>
               <p className="text-sm font-bold tabular-nums text-slate-500">{filteredStocks.length}개 표시</p>
             </div>
             <div className="mt-3 transition-all">
