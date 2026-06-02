@@ -1,6 +1,6 @@
 import type { StockItem } from "@/types/stock";
 import { formatPercent } from "@/utils/format";
-import { WeeklyProbabilityBadge } from "./WeeklyProbabilityBadge";
+import { RollingTopStocks } from "./RollingTopStocks";
 
 type SummaryCardsProps = {
   stocks: StockItem[];
@@ -43,9 +43,7 @@ export function SummaryCards({ stocks }: SummaryCardsProps) {
           <p className="mt-1.5 text-base font-black text-slate-950">TOP 30</p>
           <p className={`mt-0.5 text-xl font-black tabular-nums ${average >= 0 ? "text-emerald-600" : "text-rose-500"}`}>{formatPercent(average)}</p>
         </div>
-        <div className="col-span-2 sm:col-span-1">
-          <WeeklyProbabilityBadge probability={top.weeklyUpsideProbability} compact />
-        </div>
+        <RollingTopStocks stocks={stocks} />
       </div>
     </section>
   );
