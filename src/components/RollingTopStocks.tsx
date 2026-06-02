@@ -7,6 +7,29 @@ type RollingTopStocksProps = {
   stocks: StockItem[];
 };
 
+const KOREAN_NAMES: Record<string, string> = {
+  NVDA: "엔비디아",
+  TSLA: "테슬라",
+  AAPL: "애플",
+  MSFT: "마이크로소프트",
+  AMD: "AMD",
+  META: "메타",
+  AMZN: "아마존",
+  PLTR: "팔란티어",
+  GOOGL: "구글",
+  AVGO: "브로드컴",
+  "005930": "삼성전자",
+  "000660": "SK하이닉스",
+  "005380": "현대차",
+  "000270": "기아",
+  "035420": "네이버",
+  "035720": "카카오",
+  "373220": "LG에너지솔루션",
+  "068270": "셀트리온",
+  "005490": "POSCO홀딩스",
+  "012450": "한화에어로스페이스",
+};
+
 export function RollingTopStocks({ stocks }: RollingTopStocksProps) {
   const [index, setIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -35,10 +58,10 @@ export function RollingTopStocks({ stocks }: RollingTopStocksProps) {
             <div key={current.id} className="rolling-stock-enter min-w-0">
               <p className="text-xs font-black text-blue-700">TOP 30 자동 보기</p>
               <p className="mt-1 truncate text-base font-black text-slate-950">
-                {current.rank}. {current.name}
+                {current.rank}. {getDisplayName(current)}
               </p>
               <p className="mt-0.5 text-xs font-bold text-slate-500">
-                {current.symbol} · 관심도 {current.mentionScore}
+                {current.symbol} · Score {current.mentionScore}
               </p>
             </div>
             <span className="shrink-0 rounded-full bg-white px-3 py-1.5 text-xs font-black text-blue-700">열기</span>
@@ -62,15 +85,15 @@ export function RollingTopStocks({ stocks }: RollingTopStocksProps) {
             <div className="mt-4 flex-1 overflow-auto">
               <div className="space-y-2">
                 {stocks.slice(0, 30).map((stock) => (
-                  <div key={stock.id} className="grid grid-cols-[32px_minmax(0,1fr)_48px] items-center gap-3 rounded-2xl bg-slate-50 px-3 py-2.5">
+                  <div key={stock.id} className="grid grid-cols-[32px_minmax(0,1fr)_72px] items-center gap-3 rounded-2xl bg-slate-50 px-3 py-2.5">
                     <span className="text-sm font-black tabular-nums text-slate-500">{stock.rank}</span>
                     <span className="min-w-0">
-                      <span className="block truncate text-sm font-black text-slate-950">{stock.name}</span>
+                      <span className="block truncate text-sm font-black text-slate-950">{getDisplayName(stock)}</span>
                       <span className="block truncate text-xs font-bold text-slate-500">
                         {stock.symbol} · {stock.market}
                       </span>
                     </span>
-                    <span className="text-right text-sm font-black tabular-nums text-blue-600">{stock.mentionScore}</span>
+                    <span className="text-right text-sm font-black tabular-nums text-blue-600">Score {stock.mentionScore}</span>
                   </div>
                 ))}
               </div>
@@ -80,4 +103,8 @@ export function RollingTopStocks({ stocks }: RollingTopStocksProps) {
       )}
     </>
   );
+}
+
+function getDisplayName(stock: StockItem): string {
+  return KOREAN_NAMES[stock.symbol] ?? stock.name;
 }
