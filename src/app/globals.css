@@ -35,10 +35,25 @@ input {
   animation: rollingStockEnter 900ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.tv-focus-enter {
+  animation: tvFocusEnter 620ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 @keyframes rollingStockEnter {
   from {
     opacity: 0;
     transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes tvFocusEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
