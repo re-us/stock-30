@@ -11,6 +11,7 @@ import { SearchBar } from "@/components/SearchBar";
 import { StockDetailPanel } from "@/components/StockDetailPanel";
 import { StockRankCard } from "@/components/StockRankCard";
 import { SummaryCards } from "@/components/SummaryCards";
+import { ThinRankingChart } from "@/components/ThinRankingChart";
 import { mockStocks } from "@/data/mockStocks";
 import { calculateWeeklyUpsideProbability } from "@/lib/analytics/weeklyUpsideProbability";
 import type { FilterKey, QuantSignal, RankingsResponse, SignalHorizon, SourceStatus, StockItem } from "@/types/stock";
@@ -134,15 +135,6 @@ export default function Home() {
         <div className="mt-5">
           <SummaryCards stocks={stocks} />
         </div>
-        <div className="mt-3">
-          <DataStatusBadge
-            dataState={dataState}
-            sourceStatus={sourceStatus}
-            updatedAt={updatedAt}
-            nextUpdateAt={nextUpdateAt}
-            updateIntervalHours={updateIntervalHours}
-          />
-        </div>
         <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_390px] lg:items-start">
           <section className="min-w-0">
             <div className="space-y-3">
@@ -162,7 +154,7 @@ export default function Home() {
                     <Fragment key={stock.id}>
                       <StockRankCard stock={stock} isSelected={selectedStock.id === stock.id} onSelect={setSelectedStock} />
                       {selectedStock.id === stock.id && (
-                        <div className="lg:hidden">
+                        <div>
                           <StockDetailPanel stock={selectedStock} />
                         </div>
                       )}
@@ -175,10 +167,19 @@ export default function Home() {
             </div>
           </section>
           <div className="hidden lg:block">
-            <StockDetailPanel stock={selectedStock} />
+            <ThinRankingChart stocks={filteredStocks} selectedId={selectedStock.id} onSelect={setSelectedStock} />
           </div>
         </div>
         <div className="mt-6">
+          <DataStatusBadge
+            dataState={dataState}
+            sourceStatus={sourceStatus}
+            updatedAt={updatedAt}
+            nextUpdateAt={nextUpdateAt}
+            updateIntervalHours={updateIntervalHours}
+          />
+        </div>
+        <div className="mt-4">
           <Disclaimer />
         </div>
       </div>
