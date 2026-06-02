@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { StockItem } from "@/types/stock";
 
 type RollingTopStocksProps = {
   stocks: StockItem[];
 };
+
+type SheetMode = "mentions" | "probability";
 
 const KOREAN_NAMES: Record<string, string> = {
   NVDA: "엔비디아",
@@ -31,7 +33,7 @@ const KOREAN_NAMES: Record<string, string> = {
   "035720": "카카오",
   "373220": "LG에너지솔루션",
   "068270": "셀트리온",
-  "005490": "POSCO홀딩스",
+  "005490": "포스코홀딩스",
   "012450": "한화에어로스페이스",
   "207940": "삼성바이오로직스",
   "006400": "삼성SDI",
@@ -43,7 +45,16 @@ const KOREAN_NAMES: Record<string, string> = {
 export function RollingTopStocks({ stocks }: RollingTopStocksProps) {
   const [index, setIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [sheetMode, setSheetMode] = useState<SheetMode>("mentions");
   const current = stocks[index % Math.max(stocks.length, 1)];
+
+  const sheetStocks = useMemo(() => {
+    if (sheetMode === "probability") {
+      return [...stocks].sort((a, b) => (b.weeklyUpsideProbability?.probability ?? 0) - (a.weeklyUpsideProbability?.probability ?? 0));
+    }
+
+    return [...stocks].sort((a, b) => b.mentionScore - a.mentionScore);
+  }, [sheetMode, stocks]);
 
   useEffect(() => {
     if (stocks.length < 2) return;
@@ -95,18 +106,36 @@ export function RollingTopStocks({ stocks }: RollingTopStocksProps) {
                 닫기
               </button>
             </div>
+            <div className="mt-4 grid grid-cols-2 gap-2 rounded-full bg-slate-100 p-1">
+              <button
+                type="button"
+                onClick={() => setSheetMode("mentions")}
+                className={`min-h-10 rounded-full text-sm font-black transition ${sheetMode === "mentions" ? "bg-white text-slate-950 shadow-sm" : "text-slate-500"}`}
+              >
+                언급량 순
+              </button>
+              <button
+                type="button"
+                onClick={() => setSheetMode("probability")}
+                className={`min-h-10 rounded-full text-sm font-black transition ${sheetMode === "probability" ? "bg-white text-slate-950 shadow-sm" : "text-slate-500"}`}
+              >
+                상승확률 순
+              </button>
+            </div>
             <div className="mt-4 flex-1 overflow-auto">
               <div className="space-y-2">
-                {stocks.slice(0, 30).map((stock) => (
-                  <div key={stock.id} className="grid grid-cols-[32px_minmax(0,1fr)_72px] items-center gap-3 rounded-2xl bg-slate-50 px-3 py-2.5">
-                    <span className="text-sm font-black tabular-nums text-slate-500">{stock.rank}</span>
+                {sheetStocks.slice(0, 30).map((stock, index) => (
+                  <div key={stock.id} className="grid grid-cols-[32px_minmax(0,1fr)_82px] items-center gap-3 rounded-2xl bg-slate-50 px-3 py-2.5">
+                    <span className="text-sm font-black tabular-nums text-slate-500">{index + 1}</span>
                     <span className="min-w-0">
                       <span className="block truncate text-sm font-black text-slate-950">{getDisplayName(stock)}</span>
                       <span className="block truncate text-xs font-bold text-slate-500">
                         {stock.symbol} · {stock.market}
                       </span>
                     </span>
-                    <span className="text-right text-sm font-black tabular-nums text-blue-600">Score {stock.mentionScore}</span>
+                    <span className="text-right text-sm font-black tabular-nums text-blue-600">
+                      {sheetMode === "probability" ? `${stock.weeklyUpsideProbability?.probability ?? "-"}%` : `Score ${stock.mentionScore}`}
+                    </span>
                   </div>
                 ))}
               </div>
