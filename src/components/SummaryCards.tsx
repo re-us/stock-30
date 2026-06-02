@@ -34,7 +34,7 @@ export function SummaryCards({ stocks }: SummaryCardsProps) {
       </div>
       <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
         <div className="rounded-[20px] bg-white p-3.5 shadow-[0_6px_18px_rgba(15,23,42,0.035)]">
-          <p className="text-xs font-bold text-slate-500">급상승 관심 종목</p>
+          <p className="text-xs font-bold text-slate-500">언급 급상승 종목</p>
           <p className="mt-0.5 text-[11px] font-bold text-slate-400">최근 24시간 기준</p>
           <p className="mt-1.5 truncate text-base font-black text-slate-950">{fastest.name}</p>
           <p className="mt-0.5 text-xl font-black tabular-nums text-emerald-600">{formatPercent(fastest.mentionChangeRate)}</p>
