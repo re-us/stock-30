@@ -128,6 +128,10 @@ export default function Home() {
     setIsRefreshing(false);
   };
 
+  const handleSelectStock = (stock: StockItem) => {
+    setSelectedStock((current) => (current?.id === stock.id ? null : stock));
+  };
+
   return (
     <main className="min-h-screen bg-[#f8f9fa] px-4 py-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-[1200px]">
@@ -152,7 +156,7 @@ export default function Home() {
                 <div className="space-y-3">
                   {filteredStocks.map((stock) => (
                     <Fragment key={stock.id}>
-                      <StockRankCard stock={stock} isSelected={selectedStock?.id === stock.id} onSelect={setSelectedStock} />
+                      <StockRankCard stock={stock} isSelected={selectedStock?.id === stock.id} onSelect={handleSelectStock} />
                       {selectedStock?.id === stock.id && (
                         <div>
                           <StockDetailPanel stock={selectedStock} />
@@ -167,7 +171,7 @@ export default function Home() {
             </div>
           </section>
           <div className="hidden lg:block">
-            <ThinRankingChart stocks={filteredStocks} selectedId={selectedStock?.id ?? null} onSelect={setSelectedStock} />
+            <ThinRankingChart stocks={filteredStocks} selectedId={selectedStock?.id ?? null} onSelect={handleSelectStock} />
           </div>
         </div>
         <div className="mt-6">
