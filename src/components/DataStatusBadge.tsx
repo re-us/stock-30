@@ -27,7 +27,7 @@ export function DataStatusBadge({
         <p>마지막 {formatKoreanTime(updatedAt)}</p>
         <p>다음 {formatKoreanTime(nextUpdateAt)}</p>
         <p className="col-span-2 truncate">
-          GDELT {sourceStatus.gdelt} · Google {sourceStatus.googleNews} · Yahoo {sourceStatus.yahooFinance} · Naver {sourceStatus.naverDataLab}
+          GDELT {sourceStatus.gdelt} · Google {sourceStatus.googleNews} · Yahoo {sourceStatus.yahooFinance} · HN {sourceStatus.hackerNews} · Naver {sourceStatus.naverDataLab}
         </p>
       </div>
     </section>

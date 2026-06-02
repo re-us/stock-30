@@ -12,6 +12,7 @@ export type SourceStatus = {
   gdelt: SourceStatusValue;
   googleNews: SourceStatusValue;
   yahooFinance: SourceStatusValue;
+  hackerNews: SourceStatusValue;
   naverDataLab: SourceStatusValue;
   alphaVantage: SourceStatusValue;
   stocktwits: SourceStatusValue;
