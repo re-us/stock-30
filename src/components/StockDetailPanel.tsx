@@ -87,7 +87,7 @@ export function StockDetailPanel({ stock }: StockDetailPanelProps) {
       </section>
 
       <section className="mt-7">
-        <h3 className="text-base font-black text-slate-950">감성 분석</h3>
+        <h3 className="text-base font-black text-slate-950">반응 비율</h3>
         <div className="mt-4">
           <SentimentBar sentiment={stock.sentiment} />
         </div>

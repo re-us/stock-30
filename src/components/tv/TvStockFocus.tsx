@@ -67,7 +67,7 @@ export function TvStockFocus({ stock }: TvStockFocusProps) {
 
       <div className="mt-4 grid grid-cols-[1fr_150px] gap-3">
         <section className="rounded-[20px] bg-slate-50 p-4">
-          <h3 className="text-lg font-black text-slate-950">감성 비율</h3>
+          <h3 className="text-lg font-black text-slate-950">반응 비율</h3>
           <div className="mt-4 flex h-3 overflow-hidden rounded-full bg-slate-200">
             <span className="bg-emerald-400" style={{ width: `${stock.sentiment.positive}%` }} />
             <span className="bg-slate-300" style={{ width: `${stock.sentiment.neutral}%` }} />
