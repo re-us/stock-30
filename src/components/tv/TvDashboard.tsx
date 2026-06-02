@@ -16,7 +16,6 @@ const initialStocks = mockStocks.map((stock) => ({
 export function TvDashboard() {
   const [stocks, setStocks] = useState<StockItem[]>(initialStocks);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [updatedAt, setUpdatedAt] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -30,12 +29,10 @@ export function TvDashboard() {
       .then((data) => {
         if (!isMounted) return;
         setStocks(data.stocks.length ? data.stocks : initialStocks);
-        setUpdatedAt(data.updatedAt);
       })
       .catch(() => {
         if (!isMounted) return;
         setStocks(initialStocks);
-        setUpdatedAt(new Date().toISOString());
       })
       .finally(() => {
         if (isMounted) setIsLoading(false);
@@ -86,8 +83,8 @@ export function TvDashboard() {
             <p className="mt-2 text-xl font-bold text-slate-500">온라인 언급 기반 주식 TOP 30</p>
           </div>
           <div className="text-right">
-            <p className="text-lg font-black text-slate-600">업데이트 기준: 매일 09:00</p>
-            <p className="mt-1 text-base font-bold text-slate-400">최근 {formatKoreanTime(updatedAt)} · 데이터 기반 주식투자 참고 분석자료</p>
+            <p className="text-lg font-black text-slate-600">데이터 기반 주식투자 참고 분석자료</p>
+            <p className="mt-1 text-base font-bold text-slate-400">온라인 언급과 뉴스 노출 흐름을 종합한 방송 화면</p>
           </div>
         </header>
 
@@ -139,15 +136,4 @@ function buildClientFallbackWeeklyUpsideProbability(stock: StockItem) {
     dataSourceCount: 1,
     sampleSize: 0,
   });
-}
-
-function formatKoreanTime(value: string | null): string {
-  if (!value) return "준비 중";
-  return new Intl.DateTimeFormat("ko-KR", {
-    timeZone: "Asia/Seoul",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(value));
 }

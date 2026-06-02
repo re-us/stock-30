@@ -9,7 +9,7 @@ type TvStockFocusProps = {
 export function TvStockFocus({ stock }: TvStockFocusProps) {
   const probability = stock.weeklyUpsideProbability?.probability ?? null;
   const keywords = stock.keywords.slice(0, 3);
-  const headlines = stock.headlines.slice(0, 2);
+  const headlines = stock.headlines.slice(0, 2).map((headline) => translateHeadlineForDisplay(headline, stock));
 
   return (
     <aside key={stock.id} className="tv-focus-enter min-h-0 overflow-hidden rounded-[28px] bg-gradient-to-br from-white via-white to-slate-100 p-6 shadow-[0_18px_45px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,0.92)] ring-1 ring-black/5">
@@ -35,7 +35,7 @@ export function TvStockFocus({ stock }: TvStockFocusProps) {
       <div className="mt-4 rounded-[22px] bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] ring-1 ring-blue-100">
         <p className="text-base font-black text-blue-700">참고 분석 지표</p>
         <p className="mt-1 text-2xl font-black text-blue-950">온라인 언급 흐름과 가격 흐름 기반 참고치</p>
-        <p className="mt-2 line-clamp-1 text-base font-semibold text-blue-800">투자 판단의 근거가 아닌 보조 자료입니다.</p>
+        <p className="mt-2 line-clamp-1 text-base font-semibold text-blue-800">해당 지표는 매매 권유가 아닌 투자 판단의 보조 자료입니다.</p>
       </div>
 
       <section className="mt-4">
@@ -104,4 +104,31 @@ function getTrendHeight(values: number[], value: number): number {
   const min = Math.min(...values);
   const range = Math.max(max - min, 1);
   return 26 + ((value - min) / range) * 74;
+}
+
+function translateHeadlineForDisplay(headline: string, stock: StockItem): string {
+  if (!hasEnglish(headline)) return headline;
+
+  const source = headline.replace(/\s+-\s+[^-]+$/g, "").trim();
+  const stockName = getStockDisplayName(stock);
+  const lower = source.toLowerCase();
+
+  if (lower.includes("coinbase launches in india")) return "코인베이스, 인도 시장에서 INR 직접 결제망으로 서비스 확대";
+  if (lower.includes("strategy slides") && lower.includes("coinbase drops")) return "비트코인 매도 이슈로 스트래티지와 코인베이스 관련 뉴스 확산";
+  if (lower.includes("valuation") && lower.includes("palantir")) return "팔란티어 최근 주가 흐름 이후 밸류에이션 점검 기사";
+  if (lower.includes("nvidia") && lower.includes("humanoid robots")) return "엔비디아, 휴머노이드 로봇 관련 투자 확대 이슈 부각";
+  if (lower.includes("nvidia") && lower.includes("chip")) return "엔비디아 반도체 공급과 신규 칩 관련 이슈가 주목받음";
+  if (lower.includes("ark") && lower.includes("nvda")) return "ARK의 엔비디아 관련 매매 동향과 반도체 업종 뉴스 확산";
+  if (lower.includes("tesla")) return "테슬라 관련 전기차와 자율주행 이슈가 온라인에서 확산";
+  if (lower.includes("apple")) return "애플 관련 신제품과 AI 기능 이슈가 뉴스에 반영";
+  if (lower.includes("microsoft")) return "마이크로소프트 AI와 클라우드 사업 관련 뉴스 확산";
+  if (lower.includes("amazon")) return "아마존 AWS와 커머스 사업 관련 뉴스 확산";
+  if (lower.includes("meta")) return "메타 플랫폼스 광고와 AI 서비스 관련 뉴스 확산";
+  if (lower.includes("google") || lower.includes("alphabet")) return "알파벳 검색과 AI 서비스 관련 뉴스 확산";
+
+  return `${stockName} 관련 해외 뉴스가 온라인에서 확산`;
+}
+
+function hasEnglish(value: string): boolean {
+  return /[A-Za-z]/.test(value);
 }
