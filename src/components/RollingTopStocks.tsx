@@ -73,7 +73,12 @@ export function RollingTopStocks({ stocks }: RollingTopStocksProps) {
                 {current.symbol} · Score {current.mentionScore}
               </p>
             </div>
-            <span className="shrink-0 rounded-full bg-white px-3 py-1.5 text-xs font-black text-blue-700">열기</span>
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-blue-700" aria-hidden="true">
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <path d="M12 5v14" />
+                <path d="M5 12h14" />
+              </svg>
+            </span>
           </div>
         </div>
       </button>
