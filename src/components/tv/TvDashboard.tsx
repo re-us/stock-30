@@ -78,7 +78,7 @@ export function TvDashboard() {
           <div>
             <div className="flex items-end gap-4">
               <h1 className="text-5xl font-black leading-none tracking-normal">STOCK 30</h1>
-              <p className="pb-1 text-2xl font-black text-slate-500">TV</p>
+              <p className="mb-1 rounded-full bg-slate-100 px-3 py-1 text-sm font-black text-slate-500">MADE BY RE-US</p>
             </div>
             <p className="mt-2 text-xl font-bold text-slate-500">온라인 언급 기반 주식 TOP 30</p>
           </div>
