@@ -1,5 +1,5 @@
 import type { StockItem } from "@/types/stock";
-import { formatPercent } from "@/utils/format";
+import { formatMentionScore10, formatPercent } from "@/utils/format";
 import { RollingTopStocks } from "./RollingTopStocks";
 
 type SummaryCardsProps = {
@@ -23,8 +23,8 @@ export function SummaryCards({ stocks }: SummaryCardsProps) {
             </p>
           </div>
           <div className="shrink-0 text-right">
-            <p className="text-xs font-bold text-slate-300">관심도</p>
-            <p className="text-[28px] font-black leading-7 tabular-nums">{top.mentionScore}</p>
+            <p className="text-xs font-bold text-slate-300">Score / 10</p>
+            <p className="text-[28px] font-black leading-7 tabular-nums">{formatMentionScore10(top.mentionScore)}</p>
           </div>
         </div>
         <div className="mt-2 grid grid-cols-2 gap-1.5">

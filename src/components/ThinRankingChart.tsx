@@ -1,4 +1,5 @@
 import type { StockItem } from "@/types/stock";
+import { formatMentionScore10 } from "@/utils/format";
 
 type ThinRankingChartProps = {
   stocks: StockItem[];
@@ -13,7 +14,7 @@ export function ThinRankingChart({ stocks, selectedId, onSelect }: ThinRankingCh
     <aside className="sticky top-6 rounded-[24px] bg-white p-4 shadow-[0_8px_24px_rgba(15,23,42,0.04)]">
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-black text-slate-950">TOP 30 랭킹</h2>
-        <p className="text-xs font-bold text-slate-400">관심도</p>
+        <p className="text-xs font-bold text-slate-400">Score / 10</p>
       </div>
       <div className="mt-4 space-y-1.5">
         {stocks.slice(0, 30).map((stock) => (
@@ -35,7 +36,7 @@ export function ThinRankingChart({ stocks, selectedId, onSelect }: ThinRankingCh
             <span className="text-right text-[11px] font-black tabular-nums text-blue-600">
               {stock.weeklyUpsideProbability ? `${stock.weeklyUpsideProbability.probability}%` : "-"}
             </span>
-            <span className="text-right text-xs font-black tabular-nums text-slate-700">{stock.mentionScore}</span>
+            <span className="text-right text-xs font-black tabular-nums text-slate-700">{formatMentionScore10(stock.mentionScore)}</span>
           </button>
         ))}
       </div>

@@ -43,8 +43,8 @@ export function calculateWeeklyUpsideProbability({
   const attentionPriceScore = clamp((mentionMomentumScore + priceFlowScore) / 2 + (marketAdjustedReturn ?? 0) * 1.4, 0, 100);
 
   const factors: Factor[] = [
-    buildFactor("이번주 언급량", weeklyMentionScore, "이번주 언급 점수, 커뮤니티 언급량, 검색 관심도를 함께 반영했습니다."),
-    buildFactor("언급 변화", mentionMomentumScore, "전일 대비 언급 증가율이 높을수록 관심도 흐름에 더 반영됩니다."),
+    buildFactor("이번주 언급량", weeklyMentionScore, "이번주 언급 점수, 커뮤니티 언급량, 검색 지수를 함께 반영했습니다."),
+    buildFactor("언급 변화", mentionMomentumScore, "전일 대비 언급 증가율이 높을수록 언급 흐름에 더 반영됩니다."),
     buildFactor("긍정/부정 반응", sentimentScore, "긍정 언급과 부정 언급의 차이를 상승확률 계산에 반영했습니다."),
     buildFactor("전주 가격 흐름", priceFlowScore, "지난주 가격 흐름은 언급량 대비 참고 신호로만 반영했습니다."),
     buildFactor("관심-가격 동행", attentionPriceScore, "언급량 변화와 가격 흐름이 같은 방향으로 움직이는지 함께 참고했습니다."),
@@ -114,18 +114,18 @@ function getGrade(probability: number): ProbabilityGrade {
 }
 
 function getLabel(grade: ProbabilityGrade): string {
-  if (grade === "conservative") return "관심도는 있으나 가격 흐름 확인이 필요한 구간";
-  if (grade === "neutral") return "관심도와 가격 흐름이 중립적으로 관찰되는 구간";
-  if (grade === "positive") return "온라인 관심도와 가격 흐름이 비교적 우호적인 구간";
-  return "관심도, 뉴스 노출, 가격 흐름이 함께 강해진 구간";
+  if (grade === "conservative") return "언급은 있으나 가격 흐름 확인이 필요한 구간";
+  if (grade === "neutral") return "언급 흐름과 가격 흐름이 중립적으로 관찰되는 구간";
+  if (grade === "positive") return "온라인 언급 흐름과 가격 흐름이 비교적 우호적인 구간";
+  return "언급, 뉴스 노출, 가격 흐름이 함께 강해진 구간";
 }
 
 function getSummary(grade: ProbabilityGrade, dataQuality: DataQuality): string {
   const quality = dataQuality === "rich" ? "충분한" : dataQuality === "normal" ? "보통 수준의" : "제한적인";
   if (grade === "positive" || grade === "strong") {
-    return `${quality} 데이터에서 온라인 노출량과 검색 관심도가 높게 관찰되며 가격 흐름도 일부 동반되는 모습입니다. 이 수치는 투자 판단을 위한 보조 자료입니다.`;
+    return `${quality} 데이터에서 온라인 노출량과 검색 지수가 높게 관찰되며 가격 흐름도 일부 동반되는 모습입니다. 이 수치는 투자 판단을 위한 보조 자료입니다.`;
   }
-  return `${quality} 데이터에서 관심도는 확인되지만 가격 흐름과의 연결은 제한적으로 관찰됩니다. 이 수치는 투자 판단을 위한 보조 자료입니다.`;
+  return `${quality} 데이터에서 언급 흐름은 확인되지만 가격 흐름과의 연결은 제한적으로 관찰됩니다. 이 수치는 투자 판단을 위한 보조 자료입니다.`;
 }
 
 function buildFactor(name: string, score: number, description: string): Factor {

@@ -83,7 +83,7 @@ export function TvDashboard() {
               <h1 className="text-5xl font-black leading-none tracking-normal">STOCK 30</h1>
               <p className="pb-1 text-2xl font-black text-slate-500">TV</p>
             </div>
-            <p className="mt-2 text-xl font-bold text-slate-500">온라인 관심도 기반 주식 TOP 30</p>
+            <p className="mt-2 text-xl font-bold text-slate-500">온라인 언급 기반 주식 TOP 30</p>
           </div>
           <div className="text-right">
             <p className="text-lg font-black text-slate-600">업데이트 기준: 매일 09:00</p>
@@ -98,7 +98,7 @@ export function TvDashboard() {
 
         <footer className="flex h-10 items-center justify-between px-2 text-sm font-bold text-slate-400">
           <span>데이터 상태: 실제 데이터 연동 준비 중 · 샘플 데이터 보강 표시</span>
-          <span>본 화면은 온라인 관심도 기반 참고 자료이며, 투자 추천이나 매매 신호가 아닙니다.</span>
+          <span>본 화면은 온라인 언급 기반 참고 자료이며, 투자 추천이나 매매 신호가 아닙니다.</span>
         </footer>
       </div>
     </main>

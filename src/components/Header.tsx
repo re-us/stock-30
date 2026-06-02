@@ -36,7 +36,7 @@ export function Header({ onRefresh, isRefreshing, updatedAt }: HeaderProps) {
       </div>
       </div>
       <div className="mt-3 flex items-center justify-between gap-3 px-1">
-        <p className="text-sm font-black leading-5 text-slate-600">온라인 관심도 기반 주식 TOP 30</p>
+        <p className="text-sm font-black leading-5 text-slate-600">온라인 언급 기반 주식 TOP 30</p>
         <span className="shrink-0 rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-black uppercase tracking-normal text-slate-500">
           made by re-us
         </span>

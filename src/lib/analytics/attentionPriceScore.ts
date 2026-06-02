@@ -63,8 +63,8 @@ function getLabel({
   priceChangeRate: number | null;
 }): string {
   if (confidence === "low") return "표본이 제한되어 보수적으로 계산됨";
-  if ((correlation ?? 0) < -0.15) return "관심도와 가격 흐름의 방향성이 엇갈림";
-  if ((mentionChangeRate ?? 0) > 0 && (priceChangeRate ?? 0) <= 0) return "가격 변동보다 관심도 증가가 더 두드러짐";
-  if (score >= 70) return "관심도와 가격 흐름의 동행 정도가 강해진 구간";
-  return "관심도 증가 대비 가격 반응은 제한적";
+  if ((correlation ?? 0) < -0.15) return "언급 흐름과 가격 흐름의 방향성이 엇갈림";
+  if ((mentionChangeRate ?? 0) > 0 && (priceChangeRate ?? 0) <= 0) return "가격 변동보다 언급 증가가 더 두드러짐";
+  if (score >= 70) return "언급 흐름과 가격 흐름의 동행 정도가 강해진 구간";
+  return "언급 증가 대비 가격 반응은 제한적";
 }

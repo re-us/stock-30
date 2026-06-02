@@ -1,5 +1,5 @@
 import type { StockItem } from "@/types/stock";
-import { formatNumber, formatPercent } from "@/utils/format";
+import { formatMentionScore10, formatNumber, formatPercent } from "@/utils/format";
 
 type TvStockFocusProps = {
   stock: StockItem;
@@ -21,8 +21,8 @@ export function TvStockFocus({ stock }: TvStockFocusProps) {
           </p>
         </div>
         <div className="shrink-0 rounded-[24px] bg-slate-950 px-6 py-4 text-right text-white">
-          <p className="text-base font-bold text-slate-300">관심도</p>
-          <p className="text-6xl font-black leading-none tabular-nums">{stock.mentionScore}</p>
+          <p className="text-base font-bold text-slate-300">Score / 10</p>
+          <p className="text-6xl font-black leading-none tabular-nums">{formatMentionScore10(stock.mentionScore)}</p>
         </div>
       </div>
 
@@ -33,7 +33,7 @@ export function TvStockFocus({ stock }: TvStockFocusProps) {
 
       <div className="mt-4 rounded-[22px] bg-blue-50 p-4">
         <p className="text-base font-black text-blue-700">참고 분석 지표</p>
-        <p className="mt-1 text-2xl font-black text-blue-950">온라인 관심도와 가격 흐름 기반 참고치</p>
+        <p className="mt-1 text-2xl font-black text-blue-950">온라인 언급 흐름과 가격 흐름 기반 참고치</p>
         <p className="mt-2 line-clamp-1 text-base font-semibold text-blue-800">투자 판단의 근거가 아닌 보조 자료입니다.</p>
       </div>
 

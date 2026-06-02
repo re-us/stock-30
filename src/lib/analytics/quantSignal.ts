@@ -115,13 +115,13 @@ function getConfidence(sampleSize: number): SignalConfidence {
 function getLabel(score: number, primary: HorizonSignal): string {
   if (primary.confidence === "low") return "표본이 제한되어 보수적으로 계산됨";
   if ((primary.pearsonCorrelation ?? 0) < -0.15 || (primary.spearmanCorrelation ?? 0) < -0.15) {
-    return "관심도와 가격 흐름의 방향성이 엇갈림";
+    return "언급 흐름과 가격 흐름의 방향성이 엇갈림";
   }
   if (primary.excessReturn !== null && primary.excessReturn <= 0 && (primary.mentionChangeRate ?? 0) > 0) {
-    return "관심도 증가가 두드러지지만 시장 대비 반응은 제한적";
+    return "언급 증가가 두드러지지만 시장 대비 반응은 제한적";
   }
-  if (score >= 70) return "관심도와 가격 흐름의 동행 정도가 강해진 구간";
-  return "가격 흐름보다 관심도 증가가 먼저 나타난 구간";
+  if (score >= 70) return "언급 흐름과 가격 흐름의 동행 정도가 강해진 구간";
+  return "가격 흐름보다 언급 증가가 먼저 나타난 구간";
 }
 
 function toPercentChanges(values: number[]): number[] {

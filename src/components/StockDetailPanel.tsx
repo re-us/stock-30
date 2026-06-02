@@ -1,5 +1,5 @@
 import type { HorizonSignal, StockItem } from "@/types/stock";
-import { formatNumber, formatPercent } from "@/utils/format";
+import { formatMentionScore10, formatNumber, formatPercent } from "@/utils/format";
 import { MiniTrendChart } from "./MiniTrendChart";
 import { SentimentBar } from "./SentimentBar";
 import { formatDataQuality, formatGrade } from "./WeeklyProbabilityBadge";
@@ -30,8 +30,8 @@ export function StockDetailPanel({ stock }: StockDetailPanelProps) {
           </p>
         </div>
         <div className="shrink-0 rounded-[18px] bg-slate-950 px-4 py-3 text-right text-white">
-          <p className="text-xs font-bold text-slate-300">관심도 점수</p>
-          <p className="text-2xl font-black tabular-nums">{stock.mentionScore}</p>
+          <p className="text-xs font-bold text-slate-300">Score / 10</p>
+          <p className="text-2xl font-black tabular-nums">{formatMentionScore10(stock.mentionScore)}</p>
         </div>
       </div>
 
@@ -39,7 +39,7 @@ export function StockDetailPanel({ stock }: StockDetailPanelProps) {
         <Metric label="전일 대비" value={formatPercent(stock.mentionChangeRate)} tone={stock.mentionChangeRate >= 0 ? "text-emerald-600" : "text-rose-500"} />
         <Metric label="커뮤니티" value={formatNumber(stock.communityMentions)} />
         <Metric label="뉴스" value={formatNumber(stock.newsCount)} />
-        <Metric label="검색 관심도" value={String(stock.searchScore)} />
+        <Metric label="검색 지수" value={String(stock.searchScore)} />
       </div>
 
       {stock.weeklyUpsideProbability && (
@@ -73,7 +73,7 @@ export function StockDetailPanel({ stock }: StockDetailPanelProps) {
           </div>
 
           <p className="mt-3 rounded-[22px] bg-slate-50 p-4 text-sm font-semibold leading-6 text-slate-600">
-            본 확률은 온라인 관심도, 뉴스 노출, 가격 흐름 데이터를 기반으로 산출한 참고 분석 지표입니다. 투자 판단의 근거가 아닌 보조 자료이며, 최종 결정과 책임은 사용자 본인에게 있습니다.
+            본 확률은 온라인 언급 흐름, 뉴스 노출, 가격 흐름 데이터를 기반으로 산출한 참고 분석 지표입니다. 투자 판단의 근거가 아닌 보조 자료이며, 최종 결정과 책임은 사용자 본인에게 있습니다.
           </p>
         </section>
       )}
@@ -94,7 +94,7 @@ export function StockDetailPanel({ stock }: StockDetailPanelProps) {
 
       {usefulSignals.length > 0 && (
         <details className="mt-7 rounded-[22px] bg-slate-50 p-4">
-          <summary className="cursor-pointer text-sm font-black text-slate-900">관심도-가격 동행성 보조 분석</summary>
+          <summary className="cursor-pointer text-sm font-black text-slate-900">언급-가격 동행성 보조 분석</summary>
           <div className="mt-3 space-y-2">
             {usefulSignals.map((signal) => (
               <CompactSignal key={signal.horizon} signal={signal} />

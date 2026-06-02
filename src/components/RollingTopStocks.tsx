@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { StockItem } from "@/types/stock";
+import { formatMentionScore10 } from "@/utils/format";
 
 type RollingTopStocksProps = {
   stocks: StockItem[];
@@ -81,7 +82,7 @@ export function RollingTopStocks({ stocks }: RollingTopStocksProps) {
                 {current.rank}. {getDisplayName(current)}
               </p>
               <p className="mt-0.5 text-xs font-bold text-slate-500">
-                {current.symbol} · Score {current.mentionScore}
+                {current.symbol} · Score {formatMentionScore10(current.mentionScore)}
               </p>
             </div>
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-blue-700" aria-hidden="true">
@@ -100,7 +101,7 @@ export function RollingTopStocks({ stocks }: RollingTopStocksProps) {
             <div className="flex items-center justify-between gap-3">
               <div>
                 <h2 className="text-lg font-black text-slate-950">TOP 30 랭킹</h2>
-                <p className="mt-1 text-xs font-bold text-slate-500">온라인 관심도 기준</p>
+                <p className="mt-1 text-xs font-bold text-slate-500">온라인 언급 기준</p>
               </div>
               <button type="button" onClick={() => setIsOpen(false)} className="min-h-10 rounded-full bg-slate-100 px-4 text-sm font-black text-slate-700">
                 닫기
@@ -134,7 +135,7 @@ export function RollingTopStocks({ stocks }: RollingTopStocksProps) {
                       </span>
                     </span>
                     <span className="text-right text-sm font-black tabular-nums text-blue-600">
-                      {sheetMode === "probability" ? `${stock.weeklyUpsideProbability?.probability ?? "-"}%` : `Score ${stock.mentionScore}`}
+                      {sheetMode === "probability" ? `${stock.weeklyUpsideProbability?.probability ?? "-"}%` : `Score ${formatMentionScore10(stock.mentionScore)}`}
                     </span>
                   </div>
                 ))}

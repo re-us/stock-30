@@ -1,5 +1,5 @@
 import type { StockItem } from "@/types/stock";
-import { formatNumber, formatPercent, formatRankChange } from "@/utils/format";
+import { formatMentionScore10, formatNumber, formatPercent, formatRankChange } from "@/utils/format";
 import { MiniTrendChart } from "./MiniTrendChart";
 import { SentimentBar } from "./SentimentBar";
 import { WeeklyProbabilityBadge } from "./WeeklyProbabilityBadge";
@@ -41,8 +41,8 @@ export function StockRankCard({ stock, isSelected, onSelect }: StockRankCardProp
               </p>
             </div>
             <div className="shrink-0 text-right">
-              <p className="text-[11px] font-bold text-slate-400">관심도</p>
-              <p className="text-[24px] font-black leading-7 tabular-nums text-slate-950">{stock.mentionScore}</p>
+              <p className="text-[11px] font-bold text-slate-400">Score / 10</p>
+              <p className="text-[24px] font-black leading-7 tabular-nums text-slate-950">{formatMentionScore10(stock.mentionScore)}</p>
             </div>
           </div>
 
