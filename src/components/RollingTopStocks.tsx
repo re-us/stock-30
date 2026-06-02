@@ -66,7 +66,6 @@ export function RollingTopStocks({ stocks }: RollingTopStocksProps) {
         <div className="relative overflow-hidden">
           <div className="flex items-start justify-between gap-3">
             <div key={current.id} className="rolling-stock-enter min-w-0">
-              <p className="text-xs font-black text-blue-700">TOP 30 자동 보기</p>
               <p className="mt-1 truncate text-base font-black text-slate-950">
                 {current.rank}. {getDisplayName(current)}
               </p>
