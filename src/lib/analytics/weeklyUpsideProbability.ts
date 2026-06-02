@@ -52,14 +52,14 @@ export function calculateWeeklyUpsideProbability(params: WeeklyUpsideParams): We
 
   const rawProbability =
     50 +
-    centeredContribution(mentionScore, 50, 6) +
-    centeredContribution(newsExposureScore, 50, 5) +
-    centeredContribution(searchScore, 50, 5) +
-    centeredContribution(communityScore, 50, 4) +
-    signedContribution(mentionChangeRate, 35, 8) +
-    signedContribution(sentimentGap, 60, 8) +
-    priceContribution(params.priceChangeRate, 12, 7) +
-    priceContribution(params.marketAdjustedReturn, 10, 5) +
+    centeredContribution(mentionScore, 50, 8) +
+    centeredContribution(newsExposureScore, 50, 6) +
+    centeredContribution(searchScore, 50, 6) +
+    centeredContribution(communityScore, 50, 5) +
+    signedContribution(mentionChangeRate, 35, 11) +
+    signedContribution(sentimentGap, 60, 10) +
+    priceContribution(params.priceChangeRate, 12, 9) +
+    priceContribution(params.marketAdjustedReturn, 10, 6) +
     hitRateContribution(hitRate) +
     correlationContribution(params.pearsonCorrelation ?? null, params.spearmanCorrelation ?? null) +
     clamp(params.calibrationAdjustment ?? 0, -6, 6);
@@ -68,7 +68,7 @@ export function calculateWeeklyUpsideProbability(params: WeeklyUpsideParams): We
   let probability = 50 * (1 - reliabilityWeight) + rawProbability * reliabilityWeight;
 
   if (dataQuality === "limited") {
-    probability = clamp(50 + (probability - 50) * 0.28, 48, 55);
+    probability = clamp(50 + (probability - 50) * 0.72, 44, 69);
   }
 
   if (probability >= 70 && !allowsHighProbability({ mentionScore, mentionChangeRate, searchScore, newsExposureScore, sentimentGap, priceChangeRate: params.priceChangeRate ?? null, hitRate, modelReliabilityScore })) {
@@ -137,7 +137,7 @@ function allowsHighProbability({
 }
 
 function getReliabilityWeight(modelReliabilityScore: number, hitRate: number | null): number {
-  if (hitRate === null) return modelReliabilityScore < 45 ? 0.34 : 0.48;
+  if (hitRate === null) return modelReliabilityScore < 45 ? 0.58 : 0.68;
   if (modelReliabilityScore < 40) return 0.42;
   if (modelReliabilityScore < 60) return 0.58;
   if (modelReliabilityScore < 70) return 0.72;
