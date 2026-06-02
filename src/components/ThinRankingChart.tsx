@@ -2,7 +2,7 @@ import type { StockItem } from "@/types/stock";
 
 type ThinRankingChartProps = {
   stocks: StockItem[];
-  selectedId: string;
+  selectedId: string | null;
   onSelect: (stock: StockItem) => void;
 };
 
@@ -21,7 +21,7 @@ export function ThinRankingChart({ stocks, selectedId, onSelect }: ThinRankingCh
             key={stock.id}
             type="button"
             onClick={() => onSelect(stock)}
-            className={`grid w-full grid-cols-[28px_minmax(0,1fr)_34px] items-center gap-2 rounded-xl px-2 py-1.5 text-left transition ${
+            className={`grid w-full grid-cols-[28px_minmax(0,1fr)_36px_34px] items-center gap-2 rounded-xl px-2 py-1.5 text-left transition ${
               selectedId === stock.id ? "bg-blue-50" : "hover:bg-slate-50"
             }`}
           >
@@ -31,6 +31,9 @@ export function ThinRankingChart({ stocks, selectedId, onSelect }: ThinRankingCh
               <span className="mt-1 block h-1.5 overflow-hidden rounded-full bg-slate-100">
                 <span className="block h-full rounded-full bg-blue-500" style={{ width: `${(stock.mentionScore / maxScore) * 100}%` }} />
               </span>
+            </span>
+            <span className="text-right text-[11px] font-black tabular-nums text-blue-600">
+              {stock.weeklyUpsideProbability ? `${stock.weeklyUpsideProbability.probability}%` : "-"}
             </span>
             <span className="text-right text-xs font-black tabular-nums text-slate-700">{stock.mentionScore}</span>
           </button>

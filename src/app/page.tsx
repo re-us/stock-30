@@ -36,7 +36,7 @@ export default function Home() {
   const [filter, setFilter] = useState<FilterKey>("all");
   const [query, setQuery] = useState("");
   const [stocks, setStocks] = useState<StockItem[]>(initialStocks);
-  const [selectedStock, setSelectedStock] = useState<StockItem>(initialStocks[0]);
+  const [selectedStock, setSelectedStock] = useState<StockItem | null>(null);
   const [sourceStatus, setSourceStatus] = useState<SourceStatus>(mockSourceStatus);
   const [dataState, setDataState] = useState<DataState>("mock");
   const [updatedAt, setUpdatedAt] = useState<string | null>(null);
@@ -58,7 +58,7 @@ export default function Home() {
     setUpdatedAt(data.updatedAt);
     setNextUpdateAt(data.nextUpdateAt ?? null);
     setUpdateIntervalHours(data.updateIntervalHours);
-    setSelectedStock((current) => data.stocks.find((stock) => stock.id === current.id) ?? data.stocks[0] ?? initialStocks[0]);
+    setSelectedStock((current) => (current ? data.stocks.find((stock) => stock.id === current.id) ?? null : null));
   };
 
   const applyMockRankings = () => {
@@ -68,7 +68,7 @@ export default function Home() {
     setUpdatedAt(new Date().toISOString());
     setNextUpdateAt(null);
     setUpdateIntervalHours(6);
-    setSelectedStock((current) => initialStocks.find((stock) => stock.id === current.id) ?? initialStocks[0]);
+    setSelectedStock((current) => (current ? initialStocks.find((stock) => stock.id === current.id) ?? null : null));
   };
 
   const loadRankings = async () => {
@@ -152,8 +152,8 @@ export default function Home() {
                 <div className="space-y-3">
                   {filteredStocks.map((stock) => (
                     <Fragment key={stock.id}>
-                      <StockRankCard stock={stock} isSelected={selectedStock.id === stock.id} onSelect={setSelectedStock} />
-                      {selectedStock.id === stock.id && (
+                      <StockRankCard stock={stock} isSelected={selectedStock?.id === stock.id} onSelect={setSelectedStock} />
+                      {selectedStock?.id === stock.id && (
                         <div>
                           <StockDetailPanel stock={selectedStock} />
                         </div>
@@ -167,7 +167,7 @@ export default function Home() {
             </div>
           </section>
           <div className="hidden lg:block">
-            <ThinRankingChart stocks={filteredStocks} selectedId={selectedStock.id} onSelect={setSelectedStock} />
+            <ThinRankingChart stocks={filteredStocks} selectedId={selectedStock?.id ?? null} onSelect={setSelectedStock} />
           </div>
         </div>
         <div className="mt-6">
