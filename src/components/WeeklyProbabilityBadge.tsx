@@ -19,7 +19,11 @@ export function WeeklyProbabilityBadge({ probability, compact = false }: WeeklyP
           <p className="flex h-9 min-w-[64px] items-center justify-center whitespace-nowrap rounded-full bg-white px-3 text-xs font-black leading-none text-blue-700">
             {formatGrade(probability.grade)}
           </p>
-          {!compact && <p className="mt-2 whitespace-nowrap text-xs font-bold text-blue-700">데이터 {formatDataQuality(probability.dataQuality)}</p>}
+          {!compact && (
+            <p className="mt-2 inline-flex min-h-7 items-center justify-center whitespace-nowrap rounded-full bg-slate-100 px-2.5 text-xs font-black text-slate-500">
+              {formatDataQualityNotice(probability.dataQuality)}
+            </p>
+          )}
         </div>
       </div>
       {!compact && <p className="mt-2 text-xs font-semibold leading-5 text-blue-700">{probability.label}</p>}
@@ -38,4 +42,9 @@ export function formatDataQuality(dataQuality: DataQuality): string {
   if (dataQuality === "rich") return "충분";
   if (dataQuality === "normal") return "보통";
   return "제한적";
+}
+
+function formatDataQualityNotice(dataQuality: DataQuality): string {
+  if (dataQuality === "limited") return "주의: 데이터 제한적";
+  return `데이터 ${formatDataQuality(dataQuality)}`;
 }
