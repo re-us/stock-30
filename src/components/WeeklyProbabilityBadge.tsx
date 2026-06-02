@@ -16,7 +16,7 @@ export function WeeklyProbabilityBadge({ probability, compact = false }: WeeklyP
           <p className="mt-1 text-[28px] font-black leading-8 tabular-nums text-blue-950">{probability.probability}%</p>
         </div>
         <div className="shrink-0 text-right">
-          <p className="whitespace-nowrap rounded-full bg-white px-3 py-1.5 text-xs font-black text-blue-700">
+          <p className="flex h-9 min-w-[64px] items-center justify-center whitespace-nowrap rounded-full bg-white px-3 text-xs font-black leading-none text-blue-700">
             {formatGrade(probability.grade)}
           </p>
           {!compact && <p className="mt-2 whitespace-nowrap text-xs font-bold text-blue-700">데이터 {formatDataQuality(probability.dataQuality)}</p>}
@@ -28,7 +28,7 @@ export function WeeklyProbabilityBadge({ probability, compact = false }: WeeklyP
 }
 
 export function formatGrade(grade: ProbabilityGrade): string {
-  if (grade === "conservative") return "보수적";
+  if (grade === "conservative") return "보수";
   if (grade === "neutral") return "중립";
   if (grade === "positive") return "긍정";
   return "강함";
