@@ -131,7 +131,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#f8f9fa] px-4 py-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-[1200px]">
-        <Header onRefresh={handleRefresh} isRefreshing={isRefreshing} />
+        <Header onRefresh={handleRefresh} isRefreshing={isRefreshing} updatedAt={updatedAt} />
         <div className="mt-5">
           <SummaryCards stocks={stocks} />
         </div>
