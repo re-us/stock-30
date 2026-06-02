@@ -39,7 +39,7 @@ export function RollingTopStocks({ stocks }: RollingTopStocksProps) {
     if (stocks.length < 2) return;
     const timer = window.setInterval(() => {
       setIndex((value) => (value + 1) % stocks.length);
-    }, 3500);
+    }, 3800);
 
     return () => window.clearInterval(timer);
   }, [stocks.length]);
@@ -66,7 +66,6 @@ export function RollingTopStocks({ stocks }: RollingTopStocksProps) {
             </div>
             <span className="shrink-0 rounded-full bg-white px-3 py-1.5 text-xs font-black text-blue-700">열기</span>
           </div>
-          <span key={`${current.id}-bar`} className="rolling-stock-progress mt-3 block h-1 rounded-full bg-blue-200" />
         </div>
       </button>
 
