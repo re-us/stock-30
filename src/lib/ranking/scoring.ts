@@ -9,16 +9,22 @@ export const calculateMentionScore = ({
   newsExposureScore,
   searchTrendScore,
   communityScore,
-  momentumScore,
+  mentionMomentumScore,
+  sentimentScore,
+  sourceQualityScore,
 }: {
   newsExposureScore: number;
   searchTrendScore: number;
   communityScore: number;
-  momentumScore: number;
+  mentionMomentumScore: number;
+  sentimentScore: number;
+  sourceQualityScore: number;
 }): number =>
   clampScore(
-    newsExposureScore * 0.45 +
-      searchTrendScore * 0.30 +
+    newsExposureScore * 0.25 +
+      searchTrendScore * 0.20 +
       communityScore * 0.15 +
-      momentumScore * 0.10,
+      mentionMomentumScore * 0.25 +
+      sentimentScore * 0.10 +
+      sourceQualityScore * 0.05,
   );

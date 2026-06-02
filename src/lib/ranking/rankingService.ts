@@ -108,8 +108,9 @@ async function enrichStock(stock: StockItem, sourceFlags: SourceFlags): Promise<
   const communityMentions = stock.communityMentions + (stocktwits?.communityMentions ?? 0) + (hackerNews?.mentionsCount ?? 0) * 20;
   const sentiment = alphaVantage?.sentiment ?? stocktwits?.sentiment ?? stock.sentiment;
   const momentumScore = naverDataLab?.momentumScore ?? clampScore(50 + stock.mentionChangeRate);
+  const liveSourceCount = countLiveSources([Boolean(gdelt), Boolean(googleNews), Boolean(yahooFinance), Boolean(hackerNews), Boolean(naverDataLab), Boolean(alphaVantage), Boolean(stocktwits), Boolean(prices)]);
 
-  const mentionScore = calculateMentionScore({
+  const calculatedMentionScore = calculateMentionScore({
     newsExposureScore: liveNewsCount > 0 ? normalizeCount(liveNewsCount, 120) : stock.mentionScore,
     searchTrendScore: searchScore,
     communityScore: Math.max(
@@ -117,8 +118,11 @@ async function enrichStock(stock: StockItem, sourceFlags: SourceFlags): Promise<
       stocktwits?.communityMentions ? normalizeCount(stocktwits.communityMentions, 30) : 0,
       hackerNews?.mentionsCount ? normalizeCount(hackerNews.mentionsCount, 80) : 0,
     ),
-    momentumScore,
+    mentionMomentumScore: momentumScore,
+    sentimentScore: clampScore(50 + (sentiment.positive - sentiment.negative) * 0.9),
+    sourceQualityScore: liveSourceCount > 0 ? normalizeCount(liveSourceCount, 5) : 50,
   });
+  const mentionScore = liveSourceCount === 0 ? stock.mentionScore : calculatedMentionScore;
 
   const trend7d = naverDataLab?.trend7d?.length ? naverDataLab.trend7d : stock.trend7d;
   const correlation = buildCorrelation({ stock, trend7d, prices });
@@ -145,7 +149,7 @@ async function enrichStock(stock: StockItem, sourceFlags: SourceFlags): Promise<
       sentimentNegative: sentiment.negative,
       correlation,
       quantSignal,
-      dataSourceCount: countLiveSources([Boolean(gdelt), Boolean(googleNews), Boolean(yahooFinance), Boolean(hackerNews), Boolean(naverDataLab), Boolean(alphaVantage), Boolean(stocktwits), Boolean(prices)]),
+      dataSourceCount: liveSourceCount,
     }),
   };
 }

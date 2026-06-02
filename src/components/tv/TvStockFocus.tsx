@@ -35,6 +35,11 @@ export function TvStockFocus({ stock }: TvStockFocusProps) {
       <div className="mt-4 rounded-[22px] bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] ring-1 ring-blue-100">
         <p className="text-base font-black text-blue-700">참고 분석 지표</p>
         <p className="mt-1 text-2xl font-black text-blue-950">온라인 언급 흐름과 가격 흐름 기반 참고치</p>
+        {stock.weeklyUpsideProbability && (
+          <p className="mt-1 text-base font-bold text-blue-700">
+            모델 신뢰도: {stock.weeklyUpsideProbability.modelReliabilityLabel} · 데이터 품질: {formatTvDataQuality(stock.weeklyUpsideProbability.dataQuality)}
+          </p>
+        )}
         <p className="mt-2 line-clamp-1 text-base font-semibold text-blue-800">해당 지표는 매매 권유가 아닌 투자 판단의 보조 자료입니다.</p>
       </div>
 
@@ -97,6 +102,12 @@ function Metric({ label, value, tone }: { label: string; value: string; tone: st
       <p className={`mt-1 text-4xl font-black tabular-nums ${tone}`}>{value}</p>
     </div>
   );
+}
+
+function formatTvDataQuality(dataQuality: NonNullable<StockItem["weeklyUpsideProbability"]>["dataQuality"]): string {
+  if (dataQuality === "rich") return "충분";
+  if (dataQuality === "normal") return "보통";
+  return "제한적";
 }
 
 function getTrendHeight(values: number[], value: number): number {

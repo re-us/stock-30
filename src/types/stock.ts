@@ -56,10 +56,14 @@ export type ProbabilityGrade = "conservative" | "neutral" | "positive" | "strong
 
 export type DataQuality = "limited" | "normal" | "rich";
 
+export type ModelReliabilityLabel = "데이터 축적 중" | "보통" | "양호";
+
 export type WeeklyUpsideProbability = {
   probability: number;
   grade: ProbabilityGrade;
   dataQuality: DataQuality;
+  modelReliabilityScore: number;
+  modelReliabilityLabel: ModelReliabilityLabel;
   label: string;
   summary: string;
   factors: {

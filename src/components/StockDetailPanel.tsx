@@ -53,6 +53,7 @@ export function StockDetailPanel({ stock }: StockDetailPanelProps) {
               <div className="text-right">
                 <p className="text-xs font-black text-blue-800">분석 강도: {formatGrade(stock.weeklyUpsideProbability.grade)}</p>
                 <p className="mt-1 text-xs font-bold text-blue-700">데이터 범위: {formatDataQuality(stock.weeklyUpsideProbability.dataQuality)}</p>
+                <p className="mt-1 text-xs font-bold text-blue-700">모델 신뢰도: {stock.weeklyUpsideProbability.modelReliabilityLabel}</p>
               </div>
             </div>
             <p className="mt-4 text-sm font-bold leading-6 text-blue-900">{stock.weeklyUpsideProbability.label}</p>
