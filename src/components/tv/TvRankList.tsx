@@ -32,7 +32,7 @@ export function TvRankList({ stocks, selectedId, onSelect }: TvRankListProps) {
               <span className="truncate text-lg font-black leading-none text-slate-950">{getStockDisplayName(stock)}</span>
               <span className="ml-3 text-base font-bold leading-none text-slate-500">{stock.symbol} · {stock.market}</span>
             </span>
-            <span className="text-right text-xl font-black leading-none tabular-nums text-slate-950">Score {formatMentionScore10(stock.mentionScore)}</span>
+            <span className="text-right text-xl font-black leading-none tabular-nums text-slate-950">{formatMentionScore10(stock.mentionScore)}</span>
             <span className="text-right text-xl font-black leading-none tabular-nums text-blue-600">{stock.weeklyUpsideProbability?.probability ?? "-"}%</span>
           </button>
         ))}

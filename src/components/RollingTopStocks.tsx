@@ -50,7 +50,7 @@ export function RollingTopStocks({ stocks }: RollingTopStocksProps) {
                 {current.rank}. {getDisplayName(current)}
               </p>
               <p className="mt-0.5 text-xs font-bold text-slate-500">
-                {current.symbol} · Score {formatMentionScore10(current.mentionScore)}
+                {current.symbol} · {formatMentionScore10(current.mentionScore)}
               </p>
             </div>
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-blue-700" aria-hidden="true">
@@ -103,7 +103,7 @@ export function RollingTopStocks({ stocks }: RollingTopStocksProps) {
                       </span>
                     </span>
                     <span className="text-right text-sm font-black tabular-nums text-blue-600">
-                      {sheetMode === "probability" ? `${stock.weeklyUpsideProbability?.probability ?? "-"}%` : `Score ${formatMentionScore10(stock.mentionScore)}`}
+                      {sheetMode === "probability" ? `${stock.weeklyUpsideProbability?.probability ?? "-"}%` : formatMentionScore10(stock.mentionScore)}
                     </span>
                   </div>
                 ))}
