@@ -16,7 +16,7 @@ export function RollingTopStocks({ stocks }: RollingTopStocksProps) {
     if (stocks.length < 2) return;
     const timer = window.setInterval(() => {
       setIndex((value) => (value + 1) % stocks.length);
-    }, 2200);
+    }, 3500);
 
     return () => window.clearInterval(timer);
   }, [stocks.length]);
@@ -30,17 +30,20 @@ export function RollingTopStocks({ stocks }: RollingTopStocksProps) {
         onClick={() => setIsOpen(true)}
         className="col-span-2 rounded-[20px] bg-blue-50 p-3.5 text-left shadow-[0_6px_18px_rgba(15,23,42,0.035)] transition active:scale-[0.99] sm:col-span-1"
       >
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <p className="text-xs font-black text-blue-700">TOP 30 자동 보기</p>
-            <p className="mt-1 truncate text-base font-black text-slate-950">
-              {current.rank}. {current.name}
-            </p>
-            <p className="mt-0.5 text-xs font-bold text-slate-500">
-              {current.symbol} · 관심도 {current.mentionScore}
-            </p>
+        <div className="relative overflow-hidden">
+          <div className="flex items-start justify-between gap-3">
+            <div key={current.id} className="rolling-stock-enter min-w-0">
+              <p className="text-xs font-black text-blue-700">TOP 30 자동 보기</p>
+              <p className="mt-1 truncate text-base font-black text-slate-950">
+                {current.rank}. {current.name}
+              </p>
+              <p className="mt-0.5 text-xs font-bold text-slate-500">
+                {current.symbol} · 관심도 {current.mentionScore}
+              </p>
+            </div>
+            <span className="shrink-0 rounded-full bg-white px-3 py-1.5 text-xs font-black text-blue-700">열기</span>
           </div>
-          <span className="shrink-0 rounded-full bg-white px-3 py-1.5 text-xs font-black text-blue-700">열기</span>
+          <span key={`${current.id}-bar`} className="rolling-stock-progress mt-3 block h-1 rounded-full bg-blue-200" />
         </div>
       </button>
 
@@ -63,7 +66,9 @@ export function RollingTopStocks({ stocks }: RollingTopStocksProps) {
                     <span className="text-sm font-black tabular-nums text-slate-500">{stock.rank}</span>
                     <span className="min-w-0">
                       <span className="block truncate text-sm font-black text-slate-950">{stock.name}</span>
-                      <span className="block truncate text-xs font-bold text-slate-500">{stock.symbol} · {stock.market}</span>
+                      <span className="block truncate text-xs font-bold text-slate-500">
+                        {stock.symbol} · {stock.market}
+                      </span>
                     </span>
                     <span className="text-right text-sm font-black tabular-nums text-blue-600">{stock.mentionScore}</span>
                   </div>
