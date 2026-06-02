@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { DataQuality, ProbabilityGrade, WeeklyUpsideProbability } from "@/types/stock";
 
 type WeeklyProbabilityBadgeProps = {
@@ -19,14 +20,17 @@ export function WeeklyProbabilityBadge({ probability, compact = false }: WeeklyP
           <p className="flex h-9 min-w-[64px] items-center justify-center whitespace-nowrap rounded-full bg-white px-3 text-xs font-black leading-none text-blue-700">
             {formatGrade(probability.grade)}
           </p>
-          {!compact && (
-            <p className="mt-2 inline-flex min-h-7 items-center justify-center whitespace-nowrap rounded-full bg-slate-100 px-2.5 text-xs font-black text-slate-500">
-              {formatDataQualityNotice(probability.dataQuality)}
-            </p>
-          )}
         </div>
       </div>
-      {!compact && <p className="mt-2 text-xs font-semibold leading-5 text-blue-700">{probability.label}</p>}
+      {!compact && (
+        <>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            <Pill>모델 신뢰도: {probability.modelReliabilityLabel}</Pill>
+            <Pill>데이터 품질: {formatDataQuality(probability.dataQuality)}</Pill>
+          </div>
+          <p className="mt-2 text-xs font-semibold leading-5 text-blue-700">{probability.label}</p>
+        </>
+      )}
     </div>
   );
 }
@@ -44,7 +48,10 @@ export function formatDataQuality(dataQuality: DataQuality): string {
   return "제한적";
 }
 
-function formatDataQualityNotice(dataQuality: DataQuality): string {
-  if (dataQuality === "limited") return "주의: 데이터 제한적";
-  return `데이터 ${formatDataQuality(dataQuality)}`;
+function Pill({ children }: { children: ReactNode }) {
+  return (
+    <span className="inline-flex min-h-7 items-center justify-center whitespace-nowrap rounded-full bg-slate-100 px-2.5 text-xs font-black text-slate-500">
+      {children}
+    </span>
+  );
 }
