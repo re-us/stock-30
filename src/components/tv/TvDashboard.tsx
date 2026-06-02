@@ -97,7 +97,7 @@ export function TvDashboard() {
         </section>
 
         <footer className="flex h-10 items-center justify-between px-2 text-sm font-bold text-slate-400">
-          <span>데이터 상태: 실제 데이터 연동 준비 중 · 샘플 데이터 보강 표시</span>
+          <span>뉴스 노출, 온라인 언급, 검색 흐름, 가격 흐름을 종합한 랭킹입니다.</span>
           <span>본 화면은 온라인 언급 기반 참고 자료이며, 투자 추천이나 매매 신호가 아닙니다.</span>
         </footer>
       </div>
