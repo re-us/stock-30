@@ -17,6 +17,7 @@ import { calculateWeeklyUpsideProbability } from "@/lib/analytics/weeklyUpsidePr
 import type { FilterKey, QuantSignal, RankingsResponse, SignalHorizon, SourceStatus, StockItem } from "@/types/stock";
 
 type DataState = "live" | "partial" | "mock";
+type RankingMode = "mentions" | "probability";
 
 const mockSourceStatus: SourceStatus = {
   gdelt: "mock",
@@ -35,6 +36,7 @@ const initialStocks = mockStocks.map((stock) => ({
 
 export default function Home() {
   const [filter, setFilter] = useState<FilterKey>("all");
+  const [rankingMode, setRankingMode] = useState<RankingMode>("mentions");
   const [query, setQuery] = useState("");
   const [stocks, setStocks] = useState<StockItem[]>(initialStocks);
   const [selectedStock, setSelectedStock] = useState<StockItem | null>(null);
@@ -101,10 +103,9 @@ export default function Home() {
     };
   }, []);
 
-  const filteredStocks = useMemo(() => {
+  const rankedStocks = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
-
-    return stocks.filter((stock) => {
+    const filtered = stocks.filter((stock) => {
       const matchesFilter =
         filter === "all" ||
         (filter === "us" && stock.market === "US") ||
@@ -121,7 +122,13 @@ export default function Home() {
 
       return matchesFilter && matchesQuery;
     });
-  }, [filter, query, stocks]);
+
+    if (rankingMode === "probability") {
+      return [...filtered].sort((a, b) => (b.weeklyUpsideProbability?.probability ?? 0) - (a.weeklyUpsideProbability?.probability ?? 0));
+    }
+
+    return [...filtered].sort((a, b) => b.mentionScore - a.mentionScore);
+  }, [filter, query, rankingMode, stocks]);
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
@@ -151,14 +158,30 @@ export default function Home() {
                 <p className="text-sm font-black text-slate-900">TOP 30 랭킹</p>
                 <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-black text-slate-500">최근 24시간 집계</span>
               </div>
-              <p className="text-sm font-bold tabular-nums text-slate-500">{filteredStocks.length}개 표시</p>
+              <p className="text-sm font-bold tabular-nums text-slate-500">{rankedStocks.length}개 표시</p>
+            </div>
+            <div className="mt-3 grid grid-cols-2 gap-2 rounded-full bg-slate-100 p-1">
+              <button
+                type="button"
+                onClick={() => setRankingMode("mentions")}
+                className={`min-h-10 rounded-full text-sm font-black transition ${rankingMode === "mentions" ? "bg-white text-slate-950 shadow-sm" : "text-slate-500"}`}
+              >
+                언급량 랭킹
+              </button>
+              <button
+                type="button"
+                onClick={() => setRankingMode("probability")}
+                className={`min-h-10 rounded-full text-sm font-black transition ${rankingMode === "probability" ? "bg-white text-slate-950 shadow-sm" : "text-slate-500"}`}
+              >
+                상승확률 랭킹
+              </button>
             </div>
             <div className="mt-3 transition-all">
               {isLoading ? (
                 <LoadingSkeleton />
-              ) : filteredStocks.length > 0 ? (
+              ) : rankedStocks.length > 0 ? (
                 <div className="space-y-3">
-                  {filteredStocks.map((stock) => (
+                  {rankedStocks.map((stock) => (
                     <Fragment key={stock.id}>
                       <StockRankCard stock={stock} isSelected={selectedStock?.id === stock.id} onSelect={handleSelectStock} />
                       {selectedStock?.id === stock.id && (
@@ -175,7 +198,7 @@ export default function Home() {
             </div>
           </section>
           <div className="hidden lg:block">
-            <ThinRankingChart stocks={filteredStocks} selectedId={selectedStock?.id ?? null} onSelect={handleSelectStock} />
+            <ThinRankingChart stocks={rankedStocks} selectedId={selectedStock?.id ?? null} onSelect={handleSelectStock} />
           </div>
         </div>
         <div className="mt-6">
@@ -201,7 +224,7 @@ function buildClientFallbackQuantSignal(stock: StockItem): QuantSignal {
     score,
     primaryHorizon: "24H",
     confidence: "low",
-    label: "표본이 제한되어 보수적으로 계산됨",
+    label: "제한된 보조 변수로 계산된 참고 지표",
     horizons: (["6H", "24H", "3D", "5D"] satisfies SignalHorizon[]).map((horizon) => ({
       horizon,
       mentionChangeRate: stock.mentionChangeRate,
