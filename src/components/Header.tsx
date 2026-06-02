@@ -9,7 +9,10 @@ export function Header({ onRefresh, isRefreshing, updatedAt }: HeaderProps) {
     <header className="rounded-[20px] bg-white px-4 py-3 shadow-[0_6px_18px_rgba(15,23,42,0.035)] sm:px-6 sm:py-4">
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <h1 className="text-[22px] font-black leading-none tracking-normal text-[#191f28] sm:text-4xl">STOCK 30</h1>
+          <div className="flex flex-wrap items-end gap-x-2 gap-y-1">
+            <h1 className="text-[22px] font-black leading-none tracking-normal text-[#191f28] sm:text-4xl">STOCK 30</h1>
+            <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-black uppercase tracking-normal text-slate-500">made by re-us</span>
+          </div>
           <p className="mt-2 text-xs font-bold leading-4 text-slate-500 sm:text-sm">온라인 노출량 기반 · 최근 {formatKoreanTime(updatedAt)}</p>
         </div>
         <button
