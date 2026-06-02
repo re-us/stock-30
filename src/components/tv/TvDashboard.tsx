@@ -84,7 +84,7 @@ export function TvDashboard() {
           </div>
           <div className="text-right">
             <p className="text-lg font-black text-slate-600">데이터 기반 주식투자 참고 분석자료</p>
-            <p className="mt-1 text-base font-bold text-slate-400">온라인 언급과 뉴스 노출 흐름을 종합한 방송 화면</p>
+            <p className="mt-1 text-base font-bold text-slate-400">온라인 언급과 뉴스 노출 흐름을 종합하여 실시간 랭킹을 제공합니다</p>
           </div>
         </header>
 
