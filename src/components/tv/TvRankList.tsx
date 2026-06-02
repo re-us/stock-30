@@ -52,7 +52,7 @@ export function TvRankList({ stocks, selectedId, onSelect }: TvRankListProps) {
       <div className="mb-2 grid h-7 shrink-0 grid-cols-[48px_minmax(0,1fr)_140px_140px] items-center px-3 text-sm font-black uppercase text-slate-400">
         <span>순위</span>
         <span>종목</span>
-        <span className="text-right">Score / 10</span>
+        <span className="text-center">Score / 10</span>
         <span className="text-right">상승확률</span>
       </div>
       <div className="grid min-h-0 flex-1 gap-1" style={{ gridTemplateRows: "repeat(30, minmax(0, 1fr))" }}>
@@ -79,7 +79,7 @@ export function TvRankList({ stocks, selectedId, onSelect }: TvRankListProps) {
               <span className="truncate text-lg font-black leading-none text-slate-950">{getStockDisplayName(stock)}</span>
               <span className="ml-3 text-base font-bold leading-none text-slate-500">{stock.symbol} · {stock.market}</span>
             </span>
-            <span className="text-right text-xl font-black leading-none tabular-nums text-slate-950">{formatMentionScore10(stock.mentionScore)}</span>
+            <span className="text-center text-xl font-black leading-none tabular-nums text-slate-950">{formatMentionScore10(stock.mentionScore)}</span>
             <span className="text-right text-xl font-black leading-none tabular-nums text-blue-600">{stock.weeklyUpsideProbability?.probability ?? "-"}%</span>
           </button>
           );
