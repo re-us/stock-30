@@ -52,23 +52,23 @@ export function calculateWeeklyUpsideProbability({
 
   let probability =
     50 +
-    normalizeContribution(mentionScore, 100, 8) +
-    signedContribution(mentionChangeRate, 35, 10) +
+    normalizeContribution(mentionScore, 100, 9) +
+    signedContribution(mentionChangeRate, 35, 13) +
     normalizeContribution(newsCount, 120, 5) +
     normalizeContribution(searchScore, 100, 5) +
-    normalizeContribution(communityMentions, 13000, 6) +
-    signedContribution(sentimentGap, 60, 11);
+    normalizeContribution(communityMentions, 13000, 7) +
+    signedContribution(sentimentGap, 60, 14);
 
-  probability += priceChangeRate === null ? 0 : signedContribution(priceChangeRate, 12, 9);
-  probability += marketAdjustedReturn === null ? 0 : signedContribution(marketAdjustedReturn, 10, 7);
+  probability += priceChangeRate === null ? 0 : signedContribution(priceChangeRate, 12, 11);
+  probability += marketAdjustedReturn === null ? 0 : signedContribution(marketAdjustedReturn, 10, 8);
   probability += hitRate === null ? 0 : signedContribution(hitRate - 50, 50, 7);
   probability += correlationContribution(pearsonCorrelation, spearmanCorrelation);
 
   if (dataQuality === "limited") {
-    probability = 50 + (probability - 50) * 0.45;
+    probability = 50 + (probability - 50) * 0.68;
   }
 
-  const safeProbability = Math.round(clamp(probability, 35, 82));
+  const safeProbability = Math.round(clamp(probability, 28, 88));
   const grade = getGrade(safeProbability);
 
   return {
