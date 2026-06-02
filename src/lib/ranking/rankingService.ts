@@ -99,6 +99,7 @@ async function enrichStock(stock: StockItem, sourceFlags: SourceFlags): Promise<
   const newsCount = liveNewsCount > 0 ? liveNewsCount : stock.newsCount;
   const searchScore = naverDataLab?.searchScore ?? stock.searchScore;
   const communityMentions = stocktwits?.communityMentions ? Math.max(stock.communityMentions, stocktwits.communityMentions) : stock.communityMentions;
+  const sentiment = alphaVantage?.sentiment ?? stocktwits?.sentiment ?? stock.sentiment;
   const momentumScore = naverDataLab?.momentumScore ?? clampScore(50 + stock.mentionChangeRate);
 
   const mentionScore = calculateMentionScore({
@@ -118,7 +119,7 @@ async function enrichStock(stock: StockItem, sourceFlags: SourceFlags): Promise<
     newsCount,
     searchScore: clampScore(searchScore),
     communityMentions,
-    sentiment: alphaVantage?.sentiment ?? stocktwits?.sentiment ?? stock.sentiment,
+    sentiment,
     trend7d,
     headlines: liveHeadlines.length ? liveHeadlines : stock.headlines,
     correlation,
@@ -129,6 +130,8 @@ async function enrichStock(stock: StockItem, sourceFlags: SourceFlags): Promise<
       newsCount,
       searchScore: clampScore(searchScore),
       communityMentions,
+      sentimentPositive: sentiment.positive,
+      sentimentNegative: sentiment.negative,
       correlation,
       quantSignal,
       dataSourceCount: countLiveSources([Boolean(gdelt), Boolean(googleNews), Boolean(yahooFinance), Boolean(naverDataLab), Boolean(alphaVantage), Boolean(stocktwits), Boolean(prices)]),
@@ -272,6 +275,8 @@ function buildWeeklyUpsideProbability({
   newsCount,
   searchScore,
   communityMentions,
+  sentimentPositive,
+  sentimentNegative,
   correlation,
   quantSignal,
   dataSourceCount,
@@ -281,6 +286,8 @@ function buildWeeklyUpsideProbability({
   newsCount: number;
   searchScore: number;
   communityMentions: number;
+  sentimentPositive: number;
+  sentimentNegative: number;
   correlation: AttentionPriceCorrelation;
   quantSignal: ReturnType<typeof buildQuantSignal>;
   dataSourceCount: number;
@@ -293,8 +300,8 @@ function buildWeeklyUpsideProbability({
     newsCount,
     searchScore,
     communityMentions,
-    sentimentPositive: stock.sentiment.positive,
-    sentimentNegative: stock.sentiment.negative,
+    sentimentPositive,
+    sentimentNegative,
     priceChangeRate: correlation.lastWeekPriceChangeRate ?? primary?.priceReturn ?? null,
     marketAdjustedReturn: primary?.excessReturn ?? null,
     hitRate: primary?.hitRate ?? null,
@@ -314,6 +321,8 @@ function buildFallbackWeeklyUpsideProbability(stock: StockItem): WeeklyUpsidePro
     newsCount: stock.newsCount,
     searchScore: stock.searchScore,
     communityMentions: stock.communityMentions,
+    sentimentPositive: stock.sentiment.positive,
+    sentimentNegative: stock.sentiment.negative,
     correlation,
     quantSignal,
     dataSourceCount: 1,

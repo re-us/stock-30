@@ -35,25 +35,32 @@ export function calculateWeeklyUpsideProbability({
   sampleSize?: number;
 }): WeeklyUpsideProbability {
   const dataQuality = getDataQuality(dataSourceCount, sampleSize);
+  const sentimentGap = sentimentPositive - sentimentNegative;
+  const mentionMomentumScore = clamp(50 + mentionChangeRate * 1.4, 0, 100);
+  const weeklyMentionScore = clamp(normalize(mentionScore, 100) * 0.55 + normalize(communityMentions, 13000) * 0.3 + normalize(searchScore, 100) * 0.15, 0, 100);
+  const priceFlowScore = priceChangeRate === null ? 50 : clamp(50 + priceChangeRate * 3, 0, 100);
+  const sentimentScore = clamp(50 + sentimentGap * 0.95, 0, 100);
+  const attentionPriceScore = clamp((mentionMomentumScore + priceFlowScore) / 2 + (marketAdjustedReturn ?? 0) * 1.4, 0, 100);
+
   const factors: Factor[] = [
-    buildFactor("온라인 관심도", normalize(mentionScore, 100), "언급 점수와 검색 관심도를 함께 반영한 참고 지표입니다."),
-    buildFactor("뉴스 노출", normalize(newsCount, 120), "최근 관련 뉴스 노출량을 완만하게 반영했습니다."),
-    buildFactor("감성 흐름", clamp(50 + (sentimentPositive - sentimentNegative) * 0.7, 0, 100), "긍정 반응과 부정 반응의 차이를 참고했습니다."),
-    buildFactor("가격 흐름", priceChangeRate === null ? 50 : clamp(50 + priceChangeRate * 3, 0, 100), "최근 가격 흐름은 보조 자료로만 반영했습니다."),
+    buildFactor("이번주 언급량", weeklyMentionScore, "이번주 언급 점수, 커뮤니티 언급량, 검색 관심도를 함께 반영했습니다."),
+    buildFactor("언급 변화", mentionMomentumScore, "전일 대비 언급 증가율이 높을수록 관심도 흐름에 더 반영됩니다."),
+    buildFactor("긍정/부정 반응", sentimentScore, "긍정 언급과 부정 언급의 차이를 상승확률 계산에 반영했습니다."),
+    buildFactor("전주 가격 흐름", priceFlowScore, "지난주 가격 흐름은 언급량 대비 참고 신호로만 반영했습니다."),
+    buildFactor("관심-가격 동행", attentionPriceScore, "언급량 변화와 가격 흐름이 같은 방향으로 움직이는지 함께 참고했습니다."),
   ];
 
   let probability =
     50 +
-    normalizeContribution(mentionScore, 100, 10) +
-    signedContribution(mentionChangeRate, 35, 8) +
-    normalizeContribution(newsCount, 120, 7) +
-    normalizeContribution(searchScore, 100, 6) +
-    normalizeContribution(communityMentions, 13000, 5) +
-    normalizeContribution(sentimentPositive, 100, 6) -
-    normalizeContribution(sentimentNegative, 100, 6);
+    normalizeContribution(mentionScore, 100, 8) +
+    signedContribution(mentionChangeRate, 35, 10) +
+    normalizeContribution(newsCount, 120, 5) +
+    normalizeContribution(searchScore, 100, 5) +
+    normalizeContribution(communityMentions, 13000, 6) +
+    signedContribution(sentimentGap, 60, 11);
 
-  probability += priceChangeRate === null ? 0 : signedContribution(priceChangeRate, 12, 8);
-  probability += marketAdjustedReturn === null ? 0 : signedContribution(marketAdjustedReturn, 10, 6);
+  probability += priceChangeRate === null ? 0 : signedContribution(priceChangeRate, 12, 9);
+  probability += marketAdjustedReturn === null ? 0 : signedContribution(marketAdjustedReturn, 10, 7);
   probability += hitRate === null ? 0 : signedContribution(hitRate - 50, 50, 7);
   probability += correlationContribution(pearsonCorrelation, spearmanCorrelation);
 
