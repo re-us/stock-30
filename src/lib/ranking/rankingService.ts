@@ -8,6 +8,7 @@ import { fetchGdeltArticles } from "@/lib/data-sources/gdelt";
 import { fetchGoogleNewsRss } from "@/lib/data-sources/googleNewsRss";
 import { fetchNaverDataLab } from "@/lib/data-sources/naverDataLab";
 import { fetchStocktwits } from "@/lib/data-sources/stocktwits";
+import { fetchYahooFinanceRss } from "@/lib/data-sources/yahooFinanceRss";
 import { getDailyPrices, type PricePoint } from "@/lib/market/priceData";
 import { calculateMentionScore, clampScore, normalizeCount } from "@/lib/ranking/scoring";
 import type {
@@ -23,6 +24,7 @@ import type {
 type SourceFlags = {
   gdelt: boolean[];
   googleNews: boolean[];
+  yahooFinance: boolean[];
   naverDataLab: boolean[];
   alphaVantage: boolean[];
   stocktwits: boolean[];
@@ -32,6 +34,7 @@ export async function getRankings(): Promise<RankingsResponse> {
   const sourceFlags: SourceFlags = {
     gdelt: [],
     googleNews: [],
+    yahooFinance: [],
     naverDataLab: [],
     alphaVantage: [],
     stocktwits: [],
@@ -59,8 +62,9 @@ export function getMockRankings(): RankingsResponse {
     sourceStatus: {
       gdelt: "mock",
       googleNews: "mock",
-      naverDataLab: process.env.NAVER_CLIENT_ID && process.env.NAVER_CLIENT_SECRET ? "mock" : "disabled",
-      alphaVantage: process.env.ALPHA_VANTAGE_API_KEY ? "mock" : "disabled",
+      yahooFinance: "mock",
+      naverDataLab: hasSecret(process.env.NAVER_CLIENT_ID) && hasSecret(process.env.NAVER_CLIENT_SECRET) ? "mock" : "disabled",
+      alphaVantage: hasSecret(process.env.ALPHA_VANTAGE_API_KEY) ? "mock" : "disabled",
       stocktwits: "mock",
     },
     stocks: mockStocks.map((stock) => ({
@@ -73,9 +77,10 @@ export function getMockRankings(): RankingsResponse {
 }
 
 async function enrichStock(stock: StockItem, sourceFlags: SourceFlags): Promise<StockItem> {
-  const [gdelt, googleNews, naverDataLab, alphaVantage, stocktwits, prices] = await Promise.all([
+  const [gdelt, googleNews, yahooFinance, naverDataLab, alphaVantage, stocktwits, prices] = await Promise.all([
     fetchGdeltArticles(`${stock.name} ${stock.symbol}`),
     fetchGoogleNewsRss({ name: stock.name, symbol: stock.symbol, market: stock.market }),
+    fetchYahooFinanceRss(stock.symbol, stock.market),
     stock.market === "KR" ? fetchNaverDataLab({ name: stock.name, symbol: stock.symbol }) : Promise.resolve(null),
     stock.market === "US" ? fetchAlphaVantageNews(stock.symbol) : Promise.resolve(null),
     stock.market === "US" ? fetchStocktwits(stock.symbol) : Promise.resolve(null),
@@ -84,12 +89,13 @@ async function enrichStock(stock: StockItem, sourceFlags: SourceFlags): Promise<
 
   sourceFlags.gdelt.push(Boolean(gdelt));
   sourceFlags.googleNews.push(Boolean(googleNews));
-  if (stock.market === "KR" && process.env.NAVER_CLIENT_ID && process.env.NAVER_CLIENT_SECRET) sourceFlags.naverDataLab.push(Boolean(naverDataLab));
-  if (stock.market === "US" && process.env.ALPHA_VANTAGE_API_KEY) sourceFlags.alphaVantage.push(Boolean(alphaVantage));
+  sourceFlags.yahooFinance.push(Boolean(yahooFinance));
+  if (stock.market === "KR" && hasSecret(process.env.NAVER_CLIENT_ID) && hasSecret(process.env.NAVER_CLIENT_SECRET)) sourceFlags.naverDataLab.push(Boolean(naverDataLab));
+  if (stock.market === "US" && hasSecret(process.env.ALPHA_VANTAGE_API_KEY)) sourceFlags.alphaVantage.push(Boolean(alphaVantage));
   if (stock.market === "US") sourceFlags.stocktwits.push(Boolean(stocktwits));
 
-  const liveHeadlines = [...(gdelt?.headlines ?? []), ...(googleNews?.headlines ?? []), ...(alphaVantage?.headlines ?? [])].slice(0, 3);
-  const liveNewsCount = (gdelt?.articlesCount ?? 0) + (googleNews?.itemCount ?? 0) + (alphaVantage?.feedCount ?? 0);
+  const liveHeadlines = [...(yahooFinance?.headlines ?? []), ...(gdelt?.headlines ?? []), ...(googleNews?.headlines ?? []), ...(alphaVantage?.headlines ?? [])].slice(0, 3);
+  const liveNewsCount = (gdelt?.articlesCount ?? 0) + (googleNews?.itemCount ?? 0) + (yahooFinance?.itemCount ?? 0) + (alphaVantage?.feedCount ?? 0);
   const newsCount = liveNewsCount > 0 ? liveNewsCount : stock.newsCount;
   const searchScore = naverDataLab?.searchScore ?? stock.searchScore;
   const communityMentions = stocktwits?.communityMentions ? Math.max(stock.communityMentions, stocktwits.communityMentions) : stock.communityMentions;
@@ -125,7 +131,7 @@ async function enrichStock(stock: StockItem, sourceFlags: SourceFlags): Promise<
       communityMentions,
       correlation,
       quantSignal,
-      dataSourceCount: countLiveSources([Boolean(gdelt), Boolean(googleNews), Boolean(naverDataLab), Boolean(alphaVantage), Boolean(stocktwits), Boolean(prices)]),
+      dataSourceCount: countLiveSources([Boolean(gdelt), Boolean(googleNews), Boolean(yahooFinance), Boolean(naverDataLab), Boolean(alphaVantage), Boolean(stocktwits), Boolean(prices)]),
     }),
   };
 }
@@ -134,10 +140,15 @@ function buildSourceStatus(flags: SourceFlags): SourceStatus {
   return {
     gdelt: statusFromFlags(flags.gdelt),
     googleNews: statusFromFlags(flags.googleNews),
-    naverDataLab: process.env.NAVER_CLIENT_ID && process.env.NAVER_CLIENT_SECRET ? statusFromFlags(flags.naverDataLab) : "disabled",
-    alphaVantage: process.env.ALPHA_VANTAGE_API_KEY ? statusFromFlags(flags.alphaVantage) : "disabled",
+    yahooFinance: statusFromFlags(flags.yahooFinance),
+    naverDataLab: hasSecret(process.env.NAVER_CLIENT_ID) && hasSecret(process.env.NAVER_CLIENT_SECRET) ? statusFromFlags(flags.naverDataLab) : "disabled",
+    alphaVantage: hasSecret(process.env.ALPHA_VANTAGE_API_KEY) ? statusFromFlags(flags.alphaVantage) : "disabled",
     stocktwits: statusFromFlags(flags.stocktwits),
   };
+}
+
+function hasSecret(value: string | undefined): boolean {
+  return Boolean(value && value !== "dummy");
 }
 
 function statusFromFlags(flags: boolean[]): SourceStatusValue {

@@ -11,6 +11,7 @@ export type SourceStatusValue = "live" | "failed" | "disabled" | "mock";
 export type SourceStatus = {
   gdelt: SourceStatusValue;
   googleNews: SourceStatusValue;
+  yahooFinance: SourceStatusValue;
   naverDataLab: SourceStatusValue;
   alphaVantage: SourceStatusValue;
   stocktwits: SourceStatusValue;

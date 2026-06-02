@@ -21,7 +21,7 @@ export async function fetchAlphaVantageNews(symbol: string): Promise<AlphaVantag
   if (!safeSymbol) return null;
 
   const apiKey = process.env.ALPHA_VANTAGE_API_KEY;
-  if (!apiKey) return null;
+  if (!apiKey || apiKey === "dummy") return null;
 
   const url = new URL("https://www.alphavantage.co/query");
   url.searchParams.set("function", "NEWS_SENTIMENT");

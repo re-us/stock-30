@@ -29,7 +29,7 @@ export async function fetchNaverDataLab({
 
   const clientId = process.env.NAVER_CLIENT_ID;
   const clientSecret = process.env.NAVER_CLIENT_SECRET;
-  if (!clientId || !clientSecret) return null;
+  if (!clientId || !clientSecret || clientId === "dummy" || clientSecret === "dummy") return null;
 
   const endDate = new Date();
   const startDate = new Date(endDate);

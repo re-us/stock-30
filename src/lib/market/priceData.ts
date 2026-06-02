@@ -16,7 +16,7 @@ export async function fetchAlphaVantageDailyPrices(symbol: string): Promise<Pric
   if (!safeSymbol) return null;
 
   const apiKey = process.env.ALPHA_VANTAGE_API_KEY;
-  if (!apiKey) return null;
+  if (!apiKey || apiKey === "dummy") return null;
 
   const url = new URL("https://www.alphavantage.co/query");
   url.searchParams.set("function", "TIME_SERIES_DAILY");

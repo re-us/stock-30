@@ -21,6 +21,7 @@ type DataState = "live" | "partial" | "mock";
 const mockSourceStatus: SourceStatus = {
   gdelt: "mock",
   googleNews: "mock",
+  yahooFinance: "mock",
   naverDataLab: "disabled",
   alphaVantage: "disabled",
   stocktwits: "mock",
