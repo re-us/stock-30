@@ -40,9 +40,9 @@ export function SummaryCards({ stocks }: SummaryCardsProps) {
           <p className="mt-0.5 text-xl font-black tabular-nums text-emerald-600">{formatPercent(fastest.mentionChangeRate)}</p>
         </div>
         <div className="rounded-[20px] bg-white p-3.5 shadow-[0_6px_18px_rgba(15,23,42,0.035)]">
-          <p className="text-xs font-bold text-slate-500">평균 언급 변화</p>
-          <p className="mt-0.5 text-[11px] font-bold text-slate-400">전일 대비 기준</p>
-          <p className="mt-1.5 text-base font-black text-slate-950">TOP 30</p>
+          <p className="text-xs font-bold text-slate-500">TOP 30 평균 변화율</p>
+          <p className="mt-0.5 text-[11px] font-bold text-slate-400">전체 종목 전일 대비</p>
+          <p className="mt-1.5 text-base font-black text-slate-950">언급량 평균</p>
           <p className={`mt-0.5 text-xl font-black tabular-nums ${average >= 0 ? "text-emerald-600" : "text-rose-500"}`}>{formatPercent(average)}</p>
         </div>
         <RollingTopStocks stocks={stocks} />
