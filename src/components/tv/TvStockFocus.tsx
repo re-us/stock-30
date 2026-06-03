@@ -1,5 +1,5 @@
 import type { StockItem } from "@/types/stock";
-import { formatMentionScore10, formatPercent } from "@/utils/format";
+import { formatMentionScore10, formatPercent, formatPrice } from "@/utils/format";
 import { getStockDisplayName } from "@/utils/stockNames";
 
 type TvStockFocusProps = {
@@ -27,7 +27,8 @@ export function TvStockFocus({ stock }: TvStockFocusProps) {
         </div>
       </div>
 
-      <div className="mt-4 grid grid-cols-2 gap-3">
+      <div className="mt-4 grid grid-cols-3 gap-2">
+        <Metric label="최근가" value={stock.currentPrice ? formatPrice(stock.currentPrice.value, stock.currentPrice.currency) : "-"} tone="text-slate-950" />
         <Metric label="전일대비 관심량 증가" value={formatPercent(stock.mentionChangeRate)} tone={stock.mentionChangeRate >= 0 ? "text-emerald-600" : "text-rose-500"} />
         <Metric label="이번주 상승확률 (데이터 기반 예측)" value={probability === null ? "-" : `${probability}%`} tone="text-blue-600" />
       </div>
@@ -99,7 +100,7 @@ function Metric({ label, value, tone }: { label: string; value: string; tone: st
   return (
     <div className="rounded-[20px] bg-gradient-to-br from-white to-slate-50 p-4 shadow-[0_6px_14px_rgba(15,23,42,0.04),inset_0_1px_0_rgba(255,255,255,0.9)] ring-1 ring-slate-200/70">
       <p className="break-keep text-sm font-bold leading-5 text-slate-500">{label}</p>
-      <p className={`mt-1 text-4xl font-black tabular-nums ${tone}`}>{value}</p>
+      <p className={`mt-1 text-3xl font-black tabular-nums ${tone}`}>{value}</p>
     </div>
   );
 }

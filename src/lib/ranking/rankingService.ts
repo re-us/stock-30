@@ -10,7 +10,7 @@ import { fetchHackerNewsMentions } from "@/lib/data-sources/hackerNews";
 import { fetchNaverDataLab } from "@/lib/data-sources/naverDataLab";
 import { fetchStocktwits } from "@/lib/data-sources/stocktwits";
 import { fetchYahooFinanceRss } from "@/lib/data-sources/yahooFinanceRss";
-import { getDailyPrices, type PricePoint } from "@/lib/market/priceData";
+import { getDailyPrices, getLatestPriceQuote, type PricePoint } from "@/lib/market/priceData";
 import { calculateMentionScore, clampScore, normalizeCount } from "@/lib/ranking/scoring";
 import type {
   AttentionPriceCorrelation,
@@ -125,6 +125,7 @@ async function enrichStock(stock: StockItem, sourceFlags: SourceFlags): Promise<
   const mentionScore = liveSourceCount === 0 ? stock.mentionScore : calculatedMentionScore;
 
   const trend7d = naverDataLab?.trend7d?.length ? naverDataLab.trend7d : stock.trend7d;
+  const currentPrice = await getLatestPriceQuote(stock.symbol, stock.market, prices);
   const correlation = buildCorrelation({ stock, trend7d, prices });
   const quantSignal = buildQuantSignal({ stock, trend7d, prices });
 
@@ -137,6 +138,7 @@ async function enrichStock(stock: StockItem, sourceFlags: SourceFlags): Promise<
     sentiment,
     trend7d,
     headlines: liveHeadlines.length ? liveHeadlines : stock.headlines,
+    ...(currentPrice ? { currentPrice } : {}),
     correlation,
     quantSignal,
     weeklyUpsideProbability: buildWeeklyUpsideProbability({

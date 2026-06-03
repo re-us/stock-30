@@ -1,5 +1,5 @@
 import type { StockItem } from "@/types/stock";
-import { formatMentionScore10, formatNumber, formatPercent, formatRankChange } from "@/utils/format";
+import { formatMentionScore10, formatNumber, formatPercent, formatPrice, formatRankChange } from "@/utils/format";
 import { getStockDisplayName } from "@/utils/stockNames";
 import { MiniTrendChart } from "./MiniTrendChart";
 import { SentimentBar } from "./SentimentBar";
@@ -55,7 +55,7 @@ export function StockRankCard({ stock, isSelected, onSelect }: StockRankCardProp
           <div className="mt-3 grid gap-2.5 sm:grid-cols-[1fr_104px]">
             <div>
               <p className="text-xs font-bold leading-5 text-slate-500">
-                뉴스 {formatNumber(stock.newsCount)} · 검색 {stock.searchScore} · 커뮤니티 {formatNumber(stock.communityMentions)}
+                {stock.currentPrice ? `최근가 ${formatPrice(stock.currentPrice.value, stock.currentPrice.currency)} · ` : ""}뉴스 {formatNumber(stock.newsCount)} · 검색 {stock.searchScore} · 커뮤니티 {formatNumber(stock.communityMentions)}
               </p>
               <div className="mt-2">
                 <SentimentBar sentiment={stock.sentiment} />

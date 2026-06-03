@@ -1,6 +1,6 @@
 import { fetchWithTimeout } from "@/lib/api/fetchWithTimeout";
 import { isValidMarket, sanitizeSymbol } from "@/lib/security/validation";
-import type { Market } from "@/types/stock";
+import type { Market, PriceQuote } from "@/types/stock";
 
 export type PricePoint = {
   date: string;
@@ -9,6 +9,19 @@ export type PricePoint = {
 
 type AlphaVantageDailyResponse = {
   "Time Series (Daily)"?: Record<string, { "4. close"?: string }>;
+};
+
+type YahooChartResponse = {
+  chart?: {
+    result?: Array<{
+      meta?: {
+        regularMarketPrice?: number;
+        chartPreviousClose?: number;
+        currency?: string;
+        regularMarketTime?: number;
+      };
+    }>;
+  };
 };
 
 export async function fetchAlphaVantageDailyPrices(symbol: string): Promise<PricePoint[] | null> {
@@ -65,6 +78,44 @@ export async function getDailyPrices(symbol: string, market: Market): Promise<Pr
   if (stooqPrices && stooqPrices.length >= 14) return stooqPrices;
 
   return null;
+}
+
+export async function getLatestPriceQuote(symbol: string, market: Market, dailyPrices?: PricePoint[] | null): Promise<PriceQuote | null> {
+  const yahooQuote = await fetchYahooLatestPrice(symbol, market);
+  if (yahooQuote) return yahooQuote;
+
+  const prices = dailyPrices ?? (await getDailyPrices(symbol, market));
+  const latest = prices?.at(-1);
+  if (!latest) return null;
+
+  return {
+    value: latest.close,
+    currency: market === "KR" ? "KRW" : "USD",
+    source: market === "US" ? "Stooq" : "Fallback",
+    asOf: latest.date,
+    isDelayed: true,
+  };
+}
+
+async function fetchYahooLatestPrice(symbol: string, market: Market): Promise<PriceQuote | null> {
+  if (!isValidMarket(market)) return null;
+  const safeSymbol = sanitizeSymbol(symbol);
+  if (!safeSymbol) return null;
+
+  const yahooSymbol = market === "KR" ? `${safeSymbol}.KS` : safeSymbol;
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(yahooSymbol)}?range=1d&interval=1m`;
+  const data = await fetchWithTimeout<YahooChartResponse>(url, {}, 3500);
+  const meta = data?.chart?.result?.[0]?.meta;
+  const value = meta?.regularMarketPrice ?? meta?.chartPreviousClose;
+  if (!Number.isFinite(value) || value === undefined || value <= 0) return null;
+
+  return {
+    value,
+    currency: meta?.currency === "KRW" ? "KRW" : "USD",
+    source: "Yahoo",
+    asOf: meta?.regularMarketTime ? new Date(meta.regularMarketTime * 1000).toISOString() : new Date().toISOString(),
+    isDelayed: true,
+  };
 }
 
 function toPricePoint(date: string | undefined, close: string | undefined): PricePoint | null {

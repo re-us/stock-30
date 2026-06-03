@@ -27,6 +27,14 @@ export type AttentionPriceCorrelation = {
   label: string;
 };
 
+export type PriceQuote = {
+  value: number;
+  currency: "USD" | "KRW";
+  source: "Yahoo" | "Stooq" | "Alpha Vantage" | "Fallback";
+  asOf: string;
+  isDelayed: boolean;
+};
+
 export type SignalHorizon = "6H" | "24H" | "3D" | "5D";
 
 export type SignalConfidence = "low" | "medium" | "high";
@@ -92,6 +100,7 @@ export type StockItem = {
   reason: string;
   relatedSymbols: string[];
   headlines: string[];
+  currentPrice?: PriceQuote;
   correlation?: AttentionPriceCorrelation;
   quantSignal?: QuantSignal;
   weeklyUpsideProbability?: WeeklyUpsideProbability;

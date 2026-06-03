@@ -1,5 +1,5 @@
 import type { HorizonSignal, StockItem } from "@/types/stock";
-import { formatMentionScore10, formatNumber, formatPercent } from "@/utils/format";
+import { formatMentionScore10, formatNumber, formatPercent, formatPrice } from "@/utils/format";
 import { getStockDisplayName } from "@/utils/stockNames";
 import { MiniTrendChart } from "./MiniTrendChart";
 import { SentimentBar } from "./SentimentBar";
@@ -37,6 +37,7 @@ export function StockDetailPanel({ stock }: StockDetailPanelProps) {
       </div>
 
       <div className="mt-5 grid grid-cols-2 gap-2 sm:gap-3">
+        {stock.currentPrice && <Metric label="최근가" value={formatPrice(stock.currentPrice.value, stock.currentPrice.currency)} />}
         <Metric label="전일대비 관심량 증가" value={formatPercent(stock.mentionChangeRate)} tone={stock.mentionChangeRate >= 0 ? "text-emerald-600" : "text-rose-500"} />
         <Metric label="커뮤니티" value={formatNumber(stock.communityMentions)} />
         <Metric label="뉴스" value={formatNumber(stock.newsCount)} />
